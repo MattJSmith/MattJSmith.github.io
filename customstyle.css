@@ -1,0 +1,27 @@
+* {
+    /*set up all the default values here */
+    font-family: Calibri;
+    font-size: 20px;
+    color: navy;
+}
+
+body {
+    	background-color: lightblue;
+        margin-left:  20px;
+	border-style: solid;
+}
+
+h1 {
+    font-size: 50px;
+    text-align: center;
+    /* font-family: "Times New Roman"  how to set an indivual font */
+}
+h2
+{
+	font-size: 30px;
+	text-align: center;
+}
+h3,form
+{
+	text-align: center;
+}
