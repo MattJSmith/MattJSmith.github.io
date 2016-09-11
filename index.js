@@ -1,5 +1,5 @@
 function draw(){
-	 var ctx = document.getElementById('canvas').getContext('2d');
+	 var ctx = document.getElementById('myCanvas').getContext('2d');
 	var img = new Image();
 	img.addEventListener("load", function() {
 	}, false);
