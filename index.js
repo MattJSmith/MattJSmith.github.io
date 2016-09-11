@@ -5,6 +5,7 @@ function draw(){
 	}, false);
 	img.src = 'ScorchedOwl.png';
 	img.onload = function(){
-		ctx.drawImage(img,0,0);
+		
+		ctx.drawImage(img,0,0, img.width,image.height, 0,0,myCanvas.width, myCanvas.height);
 }
 }
