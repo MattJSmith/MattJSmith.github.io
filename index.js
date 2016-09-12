@@ -15,12 +15,12 @@ function draw(){
 setInterval(function(){ 
 	if(counter == 1)
         {
-        	document.style.cursor = "url('customCursor.png'), auto";
+        	document.body.style.cursor = "url('customCursor.png'), auto";
         	counter = 0;
         }
         else
         {
-        	document.style.cursor = "url('customCursor2.png'), auto";
+        	document.body.style.cursor = "url('customCursor2.png'), auto";
         	counter = 1;
         }
 	
