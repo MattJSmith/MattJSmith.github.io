@@ -2,7 +2,7 @@ var counter = 0;
 setInterval(function(){ 
 	if(counter == 1)
         {
-        	document.documentElement..style.cursor = "url('customCursor.png'), auto";
+        	document.documentElement.style.cursor = "url('customCursor.png'), auto";
         	counter = 0;
         }
         else
