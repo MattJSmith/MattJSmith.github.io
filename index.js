@@ -15,6 +15,10 @@ setInterval(function(){
         	document.documentElement.getElementsByName().style.cursor = "url('customCursor3.png'), auto";
         	counter = 0;
         }
+        else
+        {
+        	counter = 0;
+        }
 }, 3000);
 
 /* function draw(){
