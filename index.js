@@ -2,12 +2,12 @@ var counter = 0;
 setInterval(function(){ 
 	if(counter == 1)
         {
-        	document.documentElement.style.cursor = "url('customCursor.png'), auto";
+        	document.documentElement.getElementsByName().style.cursor = "url('customCursor.png'), auto";
         	counter = 0;
         }
         else
         {
-        	document.documentElement.style.cursor = "url('customCursor2.png'), auto";
+        	document.documentElement.getElementsByName().style.cursor = "url('customCursor2.png'), auto";
         	counter = 1;
         }
 	
