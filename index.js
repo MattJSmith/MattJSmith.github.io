@@ -15,7 +15,7 @@ function frame() {
     if (/* test for finished */) {
         clearInterval(id);
     } else {
-        if(counter = 1)
+        if(counter == 1)
         {
         	$("html").css("cursor: url('customCursor.png'), auto");
         	counter = 0;
