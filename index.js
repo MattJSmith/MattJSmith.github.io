@@ -11,11 +11,9 @@ function draw(){
 		ctx.drawImage(img,0,0, img.width,img.height, 0,0,myCanvas.width, myCanvas.height);
 }
 
-function frame() {
-    if (/* test for finished */) {
-        clearInterval(id);
-    } else {
-        if(counter == 1)
+
+setInterval(function(){ 
+	if(counter == 1)
         {
         	document.style.cursor = "url('customCursor.png'), auto";
         	counter = 0;
@@ -25,5 +23,6 @@ function frame() {
         	document.style.cursor = "url('customCursor2.png'), auto";
         	counter = 1;
         }
-    }
-}
+	
+	
+}, 500);
