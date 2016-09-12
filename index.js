@@ -1,17 +1,4 @@
 var counter = 0;
-var id = setInterval(frame, 5);
-
-function draw(){
-	var ctx = document.getElementById('myCanvas').getContext('2d');
-	var img = new Image();
-	img.addEventListener("load", function() {
-	}, false);
-	img.src = 'ScorchedOwl.png';
-	img.onload = function(){
-		ctx.drawImage(img,0,0, img.width,img.height, 0,0,myCanvas.width, myCanvas.height);
-}
-
-
 setInterval(function(){ 
 	if(counter == 1)
         {
@@ -26,3 +13,16 @@ setInterval(function(){
 	
 	
 }, 500);
+
+function draw(){
+	var ctx = document.getElementById('myCanvas').getContext('2d');
+	var img = new Image();
+	img.addEventListener("load", function() {
+	}, false);
+	img.src = 'ScorchedOwl.png';
+	img.onload = function(){
+		ctx.drawImage(img,0,0, img.width,img.height, 0,0,myCanvas.width, myCanvas.height);
+}
+
+
+
