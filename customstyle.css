@@ -3,7 +3,7 @@
     font-family: Calibri;
     font-size: 20px;
     color: navy;
-    cursor: url(customCursor.png) 2 2, auto;;
+    /*cursor: url(customCursor.png) 2 2, auto;; */
 }
 
 body {
