@@ -1,6 +1,5 @@
 document.onmousemove = = function() {handleMouseMove(event)};
-var ctx;
-var img;
+var id = setInterval(frame, 5);
 
 function draw(){
 	var ctx = document.getElementById('myCanvas').getContext('2d');
@@ -11,7 +10,11 @@ function draw(){
 	img.onload = function(){
 		ctx.drawImage(img,0,0, img.width,img.height, 0,0,myCanvas.width, myCanvas.height);
 }
-}
-function handleMouseMove(e){
-	ctx.drawImage(img,e.clientX,e.clientY, img.width,img.height, e.clientX,e.clientY,myCanvas.width, myCanvas.height);
+
+function frame() {
+    if (/* test for finished */) {
+        clearInterval(id);
+    } else {
+        /* code to change the element style */  
+    }
 }
