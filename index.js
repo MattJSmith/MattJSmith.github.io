@@ -17,12 +17,12 @@ function frame() {
     } else {
         if(counter == 1)
         {
-        	document.body.style.cursor = 'customCursor.png', auto";
+        	document.body.style.cursor = 'customCursor.png'";
         	counter = 0;
         }
         else
         {
-        	document.body.style.cursor = 'customCursor2.png', auto";
+        	document.body.style.cursor = 'customCursor2.png'";
         	counter = 1;
         }
     }
