@@ -1,4 +1,4 @@
-document.body.style.cursor = 'none';
+document.style.cursor = 'none';
 
 function draw(){
 	 var ctx = document.getElementById('myCanvas').getContext('2d');
