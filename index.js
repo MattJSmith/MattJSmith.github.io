@@ -19,7 +19,7 @@ setInterval(function(){
         {
         	counter = 0;
         }
-}, 3000);
+}, 500);
 
 /* function draw(){
 	var ctx = document.getElementById('myCanvas').getContext('2d');
