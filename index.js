@@ -1,5 +1,5 @@
 document.style.cursor = 'none';
-document.onmousemove = handleMouseMove;
+document.onmousemove = = function() {handleMouseMove(event)};
 
 function draw(){
 	var ctx = document.getElementById('myCanvas').getContext('2d');
@@ -18,6 +18,6 @@ function handleMouseMove(e)
 	}, false);
 	img.src = 'ScorchedOwl.png';
 	img.onload = function(){
-		ctx.drawImage(img,e.pageX,e.pageY, img.width,img.height, 0,0,myCanvas.width, myCanvas.height);
+		ctx.drawImage(img,e.clientX,e.clientY, img.width,img.height, 0,0,myCanvas.width, myCanvas.height);
 }
 }
