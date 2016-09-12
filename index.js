@@ -1,5 +1,5 @@
-document.onmousemove = = function() {handleMouseMove(event)};
-var id = setInterval(frame, 5);
+var counter = 0;
+var id = setInterval(frame, 30);
 
 function draw(){
 	var ctx = document.getElementById('myCanvas').getContext('2d');
@@ -15,6 +15,16 @@ function frame() {
     if (/* test for finished */) {
         clearInterval(id);
     } else {
-        /* code to change the element style */  
+        if(counter = 1)
+        {
+        	$("html").css("cursor: url('customCursor.png'), auto");
+        	counter = 0;
+        }
+        else
+        {
+        	$("html").css("cursor: url('customCursor2.png'), auto");
+        	counter = 1;
+        }
     }
+    
 }
