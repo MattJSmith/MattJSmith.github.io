@@ -2,17 +2,17 @@ var counter = 0;
 setInterval(function(){ 
 	if(counter == 0)
         {
-        	document.documentElement.getElementsByTagName("*").style.cursor = "url('customCursor.png'), auto";
+        	document.documentElement.getElementsByTagName("*").style.cursor = "url('customCursor'), auto";
         	counter = 1;
         }
         else if(counter == 1)
         {
-        	document.documentElement.getElementsByTagName("*").style.cursor = "url('customCursor2.png'), auto";
+        	document.documentElement.getElementsByTagName("*").style.cursor = "url('customCursor2'), auto";
         	counter = 2;
         }
         else if(counter == 2)
         {
-        	document.documentElement.getElementsByTagName("*").style.cursor = "url('customCursor3.png'), auto";
+        	document.documentElement.getElementsByTagName("*").style.cursor = "url('customCursor3'), auto";
         	counter = 0;
         }
         else
