@@ -1,18 +1,21 @@
 var counter = 0;
 setInterval(function(){ 
-	if(counter == 1)
+	if(counter == 0)
         {
-        	document.documentElement.getElementsByName().style.cursor = "url('customCursor.png'), pointer";
-        	counter = 0;
-        }
-        else
-        {
-        	document.documentElement.getElementsByName().style.cursor = "url('customCursor2.png'), pointer";
+        	document.documentElement.getElementsByName().style.cursor = "url('customCursor.png'), auto";
         	counter = 1;
         }
-	
-	
-}, 500);
+        if(counter == 1)
+        {
+        	document.documentElement.getElementsByName().style.cursor = "url('customCursor2.png'), auto";
+        	counter = 2;
+        }
+        if(counter == 2)
+        {
+        	document.documentElement.getElementsByName().style.cursor = "url('customCursor2.png'), auto";
+        	counter = 0;
+        }
+}, 3000);
 
 /* function draw(){
 	var ctx = document.getElementById('myCanvas').getContext('2d');
