@@ -1,9 +1,7 @@
-var img = new Image();
-var img2= new Image();
-var img3 = new Image();
-img.src = "customCursor.png"
-img2.src = "customCursor2.png"
-img3.src = "customCursor3.png"
+var img = "url('customCursor.png'), auto";
+var img2= "url('customCursor2.png'), auto";
+var img3 = "url('customCursor3.png'), auto";
+
 document.documentElement.style.cursor = img1;
 var counter = 0;
 setInterval(function(){ 
