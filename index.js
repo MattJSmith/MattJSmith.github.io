@@ -1,4 +1,3 @@
-document.style.cursor = 'none';
 document.onmousemove = = function() {handleMouseMove(event)};
 var ctx;
 var img;
