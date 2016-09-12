@@ -1,3 +1,4 @@
+document.documentElement.style.cursor = "url('customCursor.png'), auto";
 var counter = 0;
 setInterval(function(){ 
 	if(counter == 0)
