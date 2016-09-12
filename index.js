@@ -24,7 +24,7 @@ setInterval(function(){
         {
         	counter = 0;
         }
-}, 600);
+}, 1500);
 
 
 
