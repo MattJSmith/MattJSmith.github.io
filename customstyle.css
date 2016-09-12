@@ -3,6 +3,7 @@
     font-family: Calibri;
     font-size: 20px;
     color: navy;
+    cursor: url(scorchedOwl.png) 2 2, pointer;;
 }
 
 body {
