@@ -4,16 +4,21 @@ setInterval(function(){
         {
         	document.documentElement.getElementsByName().style.cursor = "url('customCursor.png'), auto";
         	counter = 1;
+        	continue;
         }
+        else
+        {
         if(counter == 1)
         {
         	document.documentElement.getElementsByName().style.cursor = "url('customCursor2.png'), auto";
         	counter = 2;
+        	continue;
         }
         if(counter == 2)
         {
-        	document.documentElement.getElementsByName().style.cursor = "url('customCursor2.png'), auto";
+        	document.documentElement.getElementsByName().style.cursor = "url('customCursor3.png'), auto";
         	counter = 0;
+        	continue;
         }
 }, 3000);
 
