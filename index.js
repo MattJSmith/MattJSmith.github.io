@@ -17,6 +17,6 @@ function mouse_position(e)
 	}, false);
 	img.src = 'ScorchedOwl.png';
 	img.onload = function(){
-		ctx.drawImage(img,0,0, img.width,img.height, 0,0,myCanvas.width, myCanvas.height);
+		ctx.drawImage(img,e.clientX,e.clientY, img.width,img.height, 0,0,myCanvas.width, myCanvas.height);
 }
 }
