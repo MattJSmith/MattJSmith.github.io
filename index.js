@@ -1,4 +1,4 @@
-var img = "url('customCursor.png'), auto";
+var img1 = "url('customCursor.png'), auto";
 var img2= "url('customCursor2.png'), auto";
 var img3 = "url('customCursor3.png'), auto";
 
