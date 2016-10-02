@@ -5,6 +5,15 @@ ctx.cur
 var raf;
 var running = false;
 
+function  getMousePos(canvas, e) {
+  var rect = canvas.getBoundingClientRect(); // abs. size of element
+
+  return {
+    x: (e.clientX - rect.left),   // scale mouse coordinates after they have
+    y: (e.clientY - rect.top)     // been adjusted to be relative to element
+  }
+};
+
 function newBall(startX,startY,startVX,startVY){ //turn into an object
   this.x = startX;
   this.y = startY;
@@ -129,10 +138,11 @@ canvas.addEventListener('mousemove', function(e) {
   {
   var boundry = 20;
   
-  
-  ballArray.forEach(function(ballItem){
-  
-    if(running && collision(ballItem.x,ballItem.y,e.clientX,e.clientY,20) == true)
+	var pos = getMousePos(canvas,e);
+	
+	ballArray.forEach(function(ballItem){
+
+    if(running && collision(ballItem.x,ballItem.y,pos.x,pos.y,20) == true)
 	{
 		gameOver();
 	} 
@@ -163,4 +173,3 @@ canvas.addEventListener("mouseout", function(e) {
   ballItem.draw();
   
   });
-
