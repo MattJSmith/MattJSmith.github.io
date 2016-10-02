@@ -5,6 +5,10 @@ ctx.cur
 var raf;
 var running = false;
 
+var currentScore = 0;
+var highestScore = 0;
+
+
 function  getMousePos(canvas, e) {
   var rect = canvas.getBoundingClientRect(); // abs. size of element
 
@@ -45,16 +49,37 @@ function newBall(startX,startY,startVX,startVY){ //turn into an object
 var ball1 = new newBall(300,150,5,1);
 var ball2 = new newBall(400,050,-4,1);
 var ball3 = new newBall(450,250,1,-2);
-var ball4 = new newBall(150,300,3,-1);
-var ball5 = new newBall(50,200,2,-2);
 
-var ballArray = [ball1,ball2,ball3,ball4,ball5]; //only lines needed to add more balls
+var ballArray = [ball1,ball2,ball3]; //only lines needed to add more balls
+
+var addBallThing;
+
+function addNewBall()
+{
+	if(running)
+	{
+		newX = Math.floor(Math.random() * 400) + 50;
+		newY = Math.floor(Math.random() * 250) + 50;
+		newVX = Math.floor(Math.random() * 7) - 4;
+		newVY = Math.floor(Math.random() * 7) - 4;
+
+		if(newVX == 0){ newVX = 1;}
+		if(newVY == 0){ newVY = 1;}
+
+		var tempBall = new newBall(newX,newY,newVX,newVY);
+
+		ballArray.push(tempBall);	
+
+		currentScore+=10;	
+	}
+
+}
 
 var mainText = {
   draw: function() {
     ctx.font="20px Georgia";
 	ctx.fillStyle = 'green';
-	ctx.fillText("Cursor Dodge!",10,50);
+	ctx.fillText("Cursor Dodge!",10,30);
   }
 };
 
@@ -71,6 +96,14 @@ var loseText = {
     ctx.font="20px Georgia";
 	ctx.fillStyle = 'black';
 	ctx.fillText("You lost!",150,50);
+  }
+};
+
+var scoreText = {
+  draw: function() {
+    ctx.font="20px Georgia";
+	ctx.fillStyle = 'black';
+	ctx.fillText("Current score: " + currentScore + "  | Best Attempt: " + highestScore,260,30);
   }
 };
 
@@ -97,6 +130,13 @@ function gameOver()
 	instructionText.draw();
 	loseText.draw();
 
+	clearInterval(addBallThing);
+
+	ballArray = [ball1,ball2,ball3];
+
+	if(currentScore > highestScore){highestScore = currentScore;}
+	currentScore = 0;
+
 	window.cancelAnimationFrame(raf);
 
 
@@ -118,10 +158,11 @@ function draw() {
 
   clear();
   mainText.draw();
+  scoreText.draw();
   
   ballArray.forEach(function(ballItem){
-  ballItem.draw();
-  ballItem.update();
+	  ballItem.draw();
+	  ballItem.update();
   });
   
   raf = window.requestAnimationFrame(draw);
@@ -157,6 +198,8 @@ canvas.addEventListener("click", function(e) {
   if (!running) {
     raf = window.requestAnimationFrame(draw);
     running = true;
+    
+    addBallThing = setInterval(addNewBall, 5000);
   }
 });
 
@@ -166,6 +209,8 @@ canvas.addEventListener("mouseout", function(e) {
   
 });
 
+	mainText.draw();
+	scoreText.draw();
   instructionText.draw();
   
   ballArray.forEach(function(ballItem){
