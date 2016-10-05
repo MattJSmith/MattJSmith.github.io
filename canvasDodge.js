@@ -7,9 +7,9 @@ var running = false;
 var currentScore = 0;
 var highestScore = 0;
 
-var mainText = new textObject("Cursor Dodge!",'green',10,30,20);
-var instructionText = new textObject("Click to begin!",'black',10,80,35);
-var loseText = new textObject("You lost!",'red',250,150,50);
+var mainText = new textObject("Cursor Dodge!",'black',10,30,20);
+var instructionText = new textObject("Click to begin!",'black',190,150,35);
+var loseText = new textObject("You lost!",'red',200,80,50);
 var scoreText = new textObject("Current score: " + currentScore + "  | Best Attempt: " + highestScore ,'black',260,30,20);
 
 var ball1 = new newBall(300,150,5,1,randomHexColour());
@@ -20,13 +20,24 @@ var ballArray = [ball1,ball2,ball3]; //only lines needed to add more balls
 
 var timedAreaFunction;
 
-mainText.draw();
-scoreText.draw();
-instructionText.draw();
-  
- ballArray.forEach(function(ballItem){
+var lastMousePos; //Position of mouse from last movement event
+
+
+
+//code starts here
+initialiseGame();
+
+function initialiseGame()
+{
+	 ballArray.forEach(function(ballItem){
 	ballItem.draw();
-});
+	});
+
+	mainText.draw();
+	scoreText.draw();
+	instructionText.draw();
+}
+
 
 function newBall(startX,startY,startVX,startVY,color){
   this.x = startX;
@@ -35,6 +46,8 @@ function newBall(startX,startY,startVX,startVY,color){
   this.vy = startVY;
   this.radius = 25;
   this.color = color,
+  this.spawnTime = 0;
+  
   this.draw = function() {
     contex.beginPath();
     contex.arc(this.x, this.y, this.radius, 0, Math.PI*2, true);
@@ -61,12 +74,15 @@ function newBall(startX,startY,startVX,startVY,color){
 };
 
 var Ticks_in_HalfSeconds = 0; //1 = 500ms
-function timedArea()
+
+function gameRunning()
 {
 	Ticks_in_HalfSeconds++;
 	
 	if(running)
 	{
+		mouseCollisionCheck();
+		
 		currentScore++;
 		scoreText.updateText("Current score: " + currentScore + "  | Best Attempt: " + highestScore );
 		
@@ -133,14 +149,14 @@ function draw() {
 
   clear();
   
-  mainText.draw();
-
-  scoreText.draw();
-  
   ballArray.forEach(function(ballItem){
 	  ballItem.draw();
 	  ballItem.update();
   });
+  
+  mainText.draw();
+
+  scoreText.draw();
   
   raf = window.requestAnimationFrame(draw);
 }
@@ -151,19 +167,22 @@ function gameOver()
 	{
 		return;
 	}
+	
 	background();
 	running = false;
 	instructionText.draw();
 	loseText.draw();
 
-	whileNotRunning();
+	endGame();
 	
 	ballArray = [ball1,ball2,ball3];
 
 	if(currentScore > highestScore){highestScore = currentScore;}
 	
 	currentScore = 0;
-
+	
+	scoreText.updateText("Current score: " + currentScore + "  | Best Attempt: " + highestScore );
+	
 	window.cancelAnimationFrame(raf);
 }
 
@@ -177,9 +196,11 @@ function background() {
   contex.fillRect(0,0,canvas.width,canvas.height);
 }
 
-function collision(x1,y1,x2,y2,tolerance)
+function ballCollision(otherX,otherY,ballX,ballY, ballRadius, tolerance)
 {
-  if(x1 <= (x2 + tolerance) && x1 >= (x2 - tolerance) && y1 <= (y2 + tolerance) && y1 >= (y2 - tolerance))
+	var radius = ballRadius + tolerance; //fairer collision
+	
+  if(otherX <= (ballX + radius) && otherX >= (ballX - radius) && otherY <= (ballY + radius) && otherY >= (ballY - radius))
   {
 	return true;
   }
@@ -201,22 +222,25 @@ function  getMousePos(canvas, e) {
 canvas.addEventListener('mousemove', function(e) {
   if (running) 
   {
-  var boundry = 20;
-  
-	var pos = getMousePos(canvas,e);
-	
-	ballArray.forEach(function(ballItem){
-
-	var tol = 18;
-	var halfTol = tol/2;
-	
-    if(running && collision(ballItem.x + halfTol, ballItem.y + halfTol, pos.x, pos.y, tol) == true)
-	{
-		gameOver();
-	} 
-  });
+	lastMousePos = getMousePos(canvas,e);
   }
 });
+
+function mouseCollisionCheck()
+{
+	ballArray.forEach(function(ballItem){
+		
+		if(ballItem.spawnTime < 1){ 
+			ballItem.spawnTime++;}
+		else {
+			var tol = 0; //not used	
+			if(running && ballCollision(lastMousePos.x, lastMousePos.y, ballItem.x, ballItem.y, ballItem.radius, tol) == true)
+			{
+				gameOver();
+			} 
+		}
+  });
+}
 
 canvas.addEventListener("mouseout", function(e) {
 
@@ -230,16 +254,16 @@ canvas.addEventListener("click", function(e) {
     raf = window.requestAnimationFrame(draw);
     running = true;
 	
-    whileRunning();
+    startGame();
   }
 });
 
-function whileRunning()
+function startGame()
 {
-	timedAreaFunction = setInterval(timedArea, 500);
+	timedAreaFunction = setInterval(gameRunning, 500);
 }
 
-function whileNotRunning()
+function endGame()
 {
 	clearInterval(timedAreaFunction);
 }
