@@ -1,52 +1,111 @@
 var canvas = document.getElementById('ballStage');
 var contex = canvas.getContext('2d');
-
 var raf; // request animation frame
+
+//actual game objects and game logic variables
 var running = false;
 
 var currentScore = 0;
 var highestScore = 0;
 
+var difficulty = 1;
+
 var mainText = new textObject("Cursor Dodge!",'black',10,30,20);
-var instructionText = new textObject("Click to begin!",'black',190,150,35);
+
+var startRectX = 180;
+var startRectY = 110;
+var startRectWidth = 250;
+var startRectHeight = 60;
+
+var difRectX = 180;
+var difRectY = 200;
+var difRectWidth = 250;
+var difRectHeight = 60;
+
+var startButtonText = new textObject("Click to begin!",'black',190,150,35);
+var difficultyButtonText = new textObject("level: " + difficulty,'black',190,250,35);
+
 var loseText = new textObject("You lost!",'red',200,80,50);
-var scoreText = new textObject("Current score: " + currentScore + "  | Best Attempt: " + highestScore ,'black',260,30,20);
+var scoreText = new textObject("Current score: " + currentScore + "  | Best Attempt: " + highestScore ,'black',240,30,20);
 
-var ball1 = new newBall(300,150,5,1,randomHexColour());
-var ball2 = new newBall(400,050,-4,1,randomHexColour());
-var ball3 = new newBall(450,250,1,-2,randomHexColour());
+var ballSpawnSpeedSeconds;
+var ballSpawnRadius;
+var scoreDifficultyMultiplier;
+var ballSafeTIme;
 
-var ballArray = [ball1,ball2,ball3]; //only lines needed to add more balls
+function setDifficulty(newDifficulty)
+{
+	difficulty = newDifficulty;
+	
+	if(difficulty == 1)
+	{
+		ballSafeTIme = 2000;
+		ballSpawnSpeedSeconds = 4;
+		ballSpawnRadius = 25;
+		scoreDifficultyMultiplier = 1;
+		
+	}
+	if(difficulty == 2)
+	{
+		ballSafeTIme = 2000;
+		ballSpawnRadius = 35;
+		ballSpawnSpeedSeconds = 3;
+		scoreDifficultyMultiplier = 1;
+	}
+	
+	if(difficulty == 3)
+	{
+		ballSafeTIme = 1500;
+		ballSpawnRadius = 40;
+		ballSpawnSpeedSeconds = 2;
+		scoreDifficultyMultiplier = 2;
+	}
+	if(difficulty == 4)
+	{
+		ballSafeTIme = 1000;
+		ballSpawnRadius = 15;
+		ballSpawnSpeedSeconds = 1;
+		scoreDifficultyMultiplier = 2;
+	}
+}
+//underlying logic variables
+var gameIntervalSpeed = 100; //in milliseconds
+
+var ticks = 0; //counter based off the gameIntervalSpeed
 
 var timedAreaFunction;
 
 var lastMousePos; //Position of mouse from last movement event
 
-
-
 //code starts here
+setDifficulty(1);
+
+var ballArray = []; //only lines needed to add more balls
+
 initialiseGame();
 
 function initialiseGame()
 {
 	 ballArray.forEach(function(ballItem){
-	ballItem.draw();
+		ballItem.draw();
 	});
 
 	mainText.draw();
 	scoreText.draw();
-	instructionText.draw();
+	
+	startButtonDraw();
+	difficultyButtonDraw();
 }
 
-
-function newBall(startX,startY,startVX,startVY,color){
+function newBall(startX,startY,startVX,startVY,startRadius, startColor, startSpawnSafeTime){
   this.x = startX;
   this.y = startY;
   this.vx = startVX;
   this.vy = startVY;
-  this.radius = 25;
-  this.color = color,
-  this.spawnTime = 0;
+  this.radius = startRadius;
+  this.color = startColor,
+  this.spawnNoDamageMilliSeconds = startSpawnSafeTime;
+  this.spawnPeriodOver = false;
   
   this.draw = function() {
     contex.beginPath();
@@ -73,29 +132,62 @@ function newBall(startX,startY,startVX,startVY,color){
   }
 };
 
-var Ticks_in_HalfSeconds = 0; //1 = 500ms
+function difficultyButtonDraw()
+{
+	difficultyButtonText.draw();
+	contex.rect(startRectX,startRectY,startRectWidth,startRectHeight);
+	contex.stroke(); 
+}
+
+function startButtonDraw(){
+	
+	startButtonText.draw();
+	contex.rect(difRectX,difRectY,difRectWidth,difRectHeight);
+	contex.stroke(); 
+}
 
 function gameRunning()
 {
-	Ticks_in_HalfSeconds++;
+	ticks++;
 	
 	if(running)
 	{
 		mouseCollisionCheck();
 		
-		currentScore++;
-		scoreText.updateText("Current score: " + currentScore + "  | Best Attempt: " + highestScore );
+		if(checkMilliSeconds(200))
+		{
+			currentScore += scoreDifficultyMultiplier;
+			
+			if(currentScore > highestScore){highestScore = currentScore;}
+			
+			scoreText.updateText("Current score: " + currentScore + "  | Best Attempt: " + highestScore );
+		}
 		
-		if(Ticks_in_HalfSeconds == 8)
+		if(checkSeconds(ballSpawnSpeedSeconds))
 		{
 			addNewBall();
-			Ticks_in_HalfSeconds = 0;
+			ticks = 0;
 		}
 	}
 	else{
 		
-		Ticks_in_HalfSeconds = 0;
+		ticks = 0;
 	}
+}
+
+function checkSeconds(time) //returns time - 1ms = 1 tick
+{
+	var result = (ticks % (time * (1000 / gameIntervalSpeed)));
+	if(result == 0){return true;}
+	return false;
+}
+
+function checkMilliSeconds(time) //returns ticks based on milliseconds you want
+{
+	var result = (ticks % (time / gameIntervalSpeed));
+	
+	if(result == 0){return true;}
+	return false;
 }
 
 function addNewBall()
@@ -111,7 +203,7 @@ function addNewBall()
 		if(newVY == 0){ newVY = 1;}
 
 		var colour = randomHexColour();
-		var tempBall = new newBall(newX,newY,newVX,newVY,colour);
+		var tempBall = new newBall(newX,newY,newVX,newVY,ballSpawnRadius, colour , ballSafeTIme);
 		
 		ballArray.push(tempBall);	
 	}
@@ -119,6 +211,8 @@ function addNewBall()
 
 function textObject(fillText,colour,x,y,textSize)
 {
+	this.x = x;
+	this.y = y;
 	this.viewingText= fillText;
 	
 	this.draw = function() {
@@ -170,12 +264,14 @@ function gameOver()
 	
 	background();
 	running = false;
-	instructionText.draw();
+	startButtonDraw();
+	difficultyButtonDraw();
+	
 	loseText.draw();
 
 	endGame();
 	
-	ballArray = [ball1,ball2,ball3];
+	ballArray = [];
 
 	if(currentScore > highestScore){highestScore = currentScore;}
 	
@@ -185,6 +281,7 @@ function gameOver()
 	
 	window.cancelAnimationFrame(raf);
 }
+
 
 function clear() {
   contex.fillStyle = 'rgba(255, 255, 255, 0.3)';
@@ -229,10 +326,15 @@ canvas.addEventListener('mousemove', function(e) {
 function mouseCollisionCheck()
 {
 	ballArray.forEach(function(ballItem){
-		
-		if(ballItem.spawnTime < 1){ 
-			ballItem.spawnTime++;}
-		else {
+		if(ballItem.spawnPeriodOver == false)
+		{
+			if(checkMilliSeconds(ballItem.spawnNoDamageMilliSeconds))
+			{
+						ballItem.spawnPeriodOver = true;
+			}
+		}
+		else
+		{
 			var tol = 0; //not used	
 			if(running && ballCollision(lastMousePos.x, lastMousePos.y, ballItem.x, ballItem.y, ballItem.radius, tol) == true)
 			{
@@ -249,22 +351,62 @@ canvas.addEventListener("mouseout", function(e) {
 });
 
 canvas.addEventListener("click", function(e) {
-  if (!running) {
-	  
-    raf = window.requestAnimationFrame(draw);
-    running = true;
 	
-    startGame();
+  if (!running) {
+	
+	var realMousePos = getMousePos(canvas,e);
+	startButton(realMousePos);
+	
+	difficultyButton(realMousePos);
   }
 });
-
+	
 function startGame()
 {
-	timedAreaFunction = setInterval(gameRunning, 500);
+	timedAreaFunction = setInterval(gameRunning, gameIntervalSpeed);
+	addNewBall();
+	addNewBall();
 }
 
 function endGame()
 {
 	clearInterval(timedAreaFunction);
+}
+
+function difficultyButton(e)
+{	
+	
+	if(e.x > difRectX && e.x < (difRectX + difRectWidth) && e.y > difRectY && e.y < (difRectY + difRectHeight) )
+	{
+		//do stuff	
+		if(difficulty >= 4)
+		{
+			difficulty = 1;		
+		}
+		else
+		{
+			difficulty++;
+		}
+		
+		setDifficulty(difficulty);
+		
+		raf = window.requestAnimationFrame(draw);
+		contex.clearRect(difRectX, difRectY, difRectWidth, difRectHeight);
+		difficultyButtonText.updateText("level: " + difficulty);
+		difficultyButtonText.draw();
+		window.cancelAnimationFrame(raf);
+	}
+}
+
+function startButton(e)
+{	
+
+	if(e.x > startRectX && e.x < (startRectX + startRectWidth) && e.y > startRectY && e.y < (startRectY + startRectHeight) )
+	{
+		raf = window.requestAnimationFrame(draw);
+		running = true;
+	
+		startGame();
+	}
 }
 
