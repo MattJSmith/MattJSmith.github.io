@@ -7,7 +7,7 @@ window.onload = draw;
 		var ctx = canvas.getContext('2d');
 		
 
-		for(i = 1; i <= 70; i+=10)
+		for(i = 1; i <= 140; i+=10)
 		{
 			ctx.fillStyle = "rgba(" + i + ",0,0,0.8)";
 			var t = i*2;
@@ -15,6 +15,6 @@ window.onload = draw;
 		}
 
         ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
-        ctx.fillRect (0, 0, 180, 180);
+        ctx.fillRect (0, 0, 300, 300);
 		
 	}	

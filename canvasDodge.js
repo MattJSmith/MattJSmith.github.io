@@ -97,13 +97,16 @@ function initialiseGame()
 	difficultyButtonDraw();
 }
 
-function newBall(startX,startY,startVX,startVY,startRadius, startColor, startSpawnSafeTime){
+function newBall(startX,startY,startVX,startVY,startRadius, R,G,B,A, startSpawnSafeTime){
   this.x = startX;
   this.y = startY;
   this.vx = startVX;
   this.vy = startVY;
   this.radius = startRadius;
-  this.color = startColor,
+  this.colorR = R,
+  this.colorG = G,
+  this.colorB = B,
+  this.colorA = A,
   this.spawnNoDamageMilliSeconds = startSpawnSafeTime;
   this.spawnPeriodOver = false;
   
@@ -111,7 +114,9 @@ function newBall(startX,startY,startVX,startVY,startRadius, startColor, startSpa
     contex.beginPath();
     contex.arc(this.x, this.y, this.radius, 0, Math.PI*2, true);
     contex.closePath();
-    contex.fillStyle = this.color;
+	
+	var color = "rgba(" + this.colorR + ", " + this.colorG + ", " + this.colorB + ", " + this.colorA + ")";
+    contex.fillStyle = color;
     contex.fill();
 	
 	contex.lineWidth = 1;
@@ -202,8 +207,14 @@ function addNewBall()
 		if(newVX == 0){ newVX = 1;}
 		if(newVY == 0){ newVY = 1;}
 
-		var colour = randomHexColour();
-		var tempBall = new newBall(newX,newY,newVX,newVY,ballSpawnRadius, colour , ballSafeTIme);
+		//var colour = randomHexColour();
+		
+		var r = randon255ForColour();
+		var g = randon255ForColour(r);
+		var b = randon255ForColour(g);
+		var a = 0.1;
+		
+		var tempBall = new newBall(newX,newY,newVX,newVY,ballSpawnRadius,r,g,b,a,ballSafeTIme);
 		
 		ballArray.push(tempBall);	
 	}
@@ -225,6 +236,20 @@ function textObject(fillText,colour,x,y,textSize)
 			this.viewingText = newText;
 	}
 };
+
+function randon255ForColour(prevColour = 0)
+{	
+	var boundry = prevColour + 5;
+	
+	var botHalf = Math.floor((Math.random() * 255 - prevColour)) + prevColour;
+	var topHalf = Math.floor((Math.random() * 255 + prevColour)) - prevColour;
+
+	var coinFlip = Math.floor(Math.random());
+	
+	if(coinFlip == 0) {return botHalf;}
+	
+	return topHalf;
+}
 
 function randomHexColour()
 {
@@ -331,6 +356,7 @@ function mouseCollisionCheck()
 			if(checkMilliSeconds(ballItem.spawnNoDamageMilliSeconds))
 			{
 						ballItem.spawnPeriodOver = true;
+						ballItem.colorA = 0.8;
 			}
 		}
 		else
