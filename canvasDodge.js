@@ -33,6 +33,76 @@ var ballSpawnRadius;
 var scoreDifficultyMultiplier;
 var ballSafeTIme;
 
+//underlying logic variables
+var gameIntervalSpeed = 100; //in milliseconds
+
+var ticks = 0; //counter based off the gameIntervalSpeed
+
+var timedAreaFunction;
+
+var lastMousePos; //Position of mouse from last movement event
+
+//code starts here
+setDifficulty(1);
+
+var ballArray = []; //only lines needed to add more balls
+
+initialiseGame();
+
+function  getMousePos(canvas, e) {
+  var rect = canvas.getBoundingClientRect(); // abs. size of element
+
+  return {
+    x: (e.clientX - rect.left),   // scale mouse coordinates after they have
+    y: (e.clientY - rect.top)     // been adjusted to be relative to element
+  }
+};
+
+canvas.addEventListener('mousemove', function(e) {
+  if (running) 
+  {
+	lastMousePos = getMousePos(canvas,e);
+  }
+});
+
+canvas.addEventListener("mouseout", function(e) {
+
+		gameOver();
+  
+});
+
+canvas.addEventListener("click", function(e) {
+	
+  if (!running) {
+	
+	var realMousePos = getMousePos(canvas,e);
+	startButton(realMousePos);
+	
+	difficultyButton(realMousePos);
+  }
+});
+function mouseCollisionCheck()
+{
+	ballArray.forEach(function(ballItem){
+		if(ballItem.spawnPeriodOver == false)
+		{
+			if(checkMilliSeconds(ballItem.spawnNoDamageMilliSeconds))
+			{
+						ballItem.spawnPeriodOver = true;
+						ballItem.colorA = 0.8;
+			}
+		}
+		else
+		{
+			var tol = 0; //not used	
+			if(running && ballCollision(lastMousePos.x, lastMousePos.y, ballItem.x, ballItem.y, ballItem.radius, tol) == true)
+			{
+				gameOver();
+			} 
+		}
+  });
+}
+
 function setDifficulty(newDifficulty)
 {
 	difficulty = newDifficulty;
@@ -68,21 +138,7 @@ function setDifficulty(newDifficulty)
 		scoreDifficultyMultiplier = 2;
 	}
 }
-//underlying logic variables
-var gameIntervalSpeed = 100; //in milliseconds
 
-var ticks = 0; //counter based off the gameIntervalSpeed
-
-var timedAreaFunction;
-
-var lastMousePos; //Position of mouse from last movement event
-
-//code starts here
-setDifficulty(1);
-
-var ballArray = []; //only lines needed to add more balls
-
-initialiseGame();
 
 function initialiseGame()
 {
@@ -264,7 +320,7 @@ function randomHexColour()
 	
 }
 
-function draw() {
+function canvasDodgeGameDraw() {
 
   clear();
   
@@ -277,7 +333,7 @@ function draw() {
 
   scoreText.draw();
   
-  raf = window.requestAnimationFrame(draw);
+  raf = window.requestAnimationFrame(canvasDodgeGameDraw);
 }
 
 function gameOver()
@@ -332,60 +388,7 @@ function ballCollision(otherX,otherY,ballX,ballY, ballRadius, tolerance)
   }
 }
 
-function  getMousePos(canvas, e) {
-  var rect = canvas.getBoundingClientRect(); // abs. size of element
 
-  return {
-    x: (e.clientX - rect.left),   // scale mouse coordinates after they have
-    y: (e.clientY - rect.top)     // been adjusted to be relative to element
-  }
-};
-
-canvas.addEventListener('mousemove', function(e) {
-  if (running) 
-  {
-	lastMousePos = getMousePos(canvas,e);
-  }
-});
-
-function mouseCollisionCheck()
-{
-	ballArray.forEach(function(ballItem){
-		if(ballItem.spawnPeriodOver == false)
-		{
-			if(checkMilliSeconds(ballItem.spawnNoDamageMilliSeconds))
-			{
-						ballItem.spawnPeriodOver = true;
-						ballItem.colorA = 0.8;
-			}
-		}
-		else
-		{
-			var tol = 0; //not used	
-			if(running && ballCollision(lastMousePos.x, lastMousePos.y, ballItem.x, ballItem.y, ballItem.radius, tol) == true)
-			{
-				gameOver();
-			} 
-		}
-  });
-}
-
-canvas.addEventListener("mouseout", function(e) {
-
-		gameOver();
-  
-});
-
-canvas.addEventListener("click", function(e) {
-	
-  if (!running) {
-	
-	var realMousePos = getMousePos(canvas,e);
-	startButton(realMousePos);
-	
-	difficultyButton(realMousePos);
-  }
-});
 	
 function startGame()
 {
@@ -416,7 +419,7 @@ function difficultyButton(e)
 		
 		setDifficulty(difficulty);
 		
-		raf = window.requestAnimationFrame(draw);
+		canvasDodgeGameDraw();
 		contex.clearRect(difRectX, difRectY, difRectWidth, difRectHeight);
 		difficultyButtonText.updateText("level: " + difficulty);
 		difficultyButtonText.draw();
@@ -429,7 +432,7 @@ function startButton(e)
 
 	if(e.x > startRectX && e.x < (startRectX + startRectWidth) && e.y > startRectY && e.y < (startRectY + startRectHeight) )
 	{
-		raf = window.requestAnimationFrame(draw);
+		canvasDodgeGameDraw();
 		running = true;
 	
 		startGame();
