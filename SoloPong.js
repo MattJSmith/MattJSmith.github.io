@@ -179,7 +179,7 @@ function PongTextObjects(fillText,colour,x,y,textSize)
 	};
 	this.updateText = function(newText)
 	{
-			this.viewingText = newText;
+		this.viewingText = newText;
 	}
 };
 
@@ -212,7 +212,9 @@ function PongGameOver()
 
 	PongEndGame();
 
-	if(pongCurrentScore > ponghighScore){ponghighScore = pongCurrentScore;}
+	if(pongCurrentScore > ponghighScore){
+		ponghighScore = pongCurrentScore;
+		}
 	
 	pongCurrentScore = 0;
 	

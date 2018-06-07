@@ -27,7 +27,10 @@ var difRectWidth = 250;
 var difRectHeight = 60;
 
 var startButtonText = new textObject("Click to begin!",'black',190,150,35);
-var difficultyButtonText = new textObject("level: " + difficulty,'black',190,250,35);
+var pickLevelText = "Pick Level: "
+
+var difficultyButtonText = new textObject(pickLevelText + difficulty,'black',190,250,35);
+
 
 var loseText = new textObject("You lost!",'red',200,80,50);
 var scoreText = new textObject("Current score: " + currentScore + "  | Best Attempt: " + highestScore ,'black',240,30,20);
@@ -456,9 +459,8 @@ function difficultyButton(e)
 		
 		setDifficulty(difficulty);
 		
-		canvasDodgeGameDraw();
 		contex.clearRect(difRectX, difRectY, difRectWidth, difRectHeight);
-		difficultyButtonText.updateText("level: " + difficulty);
+		difficultyButtonText.updateText(pickLevelText + difficulty);
 		difficultyButtonText.draw();
 		window.cancelAnimationFrame(raf);
 	}
