@@ -23,6 +23,8 @@ var pongscoreText = new PongTextObjects("Current score: " + pongCurrentScore + "
 
 var pongBall;
 
+var backgroundColour = 'rgba(200, 225, 225, 1)';
+
 //underlying logic variables
 var pongGameIntervalSpeed = 100; //in milliseconds
 
@@ -30,10 +32,11 @@ var pongTicks = 0; //counter based off the pongGameIntervalSpeed
 
 var pongTimedAreaFunction;
 
-//Start Game
+//Start Game - Actual Code that is running
 
 PongInitialiseGame();
 
+//Events that are active at start
 pongCanvas.addEventListener('mousemove', function(e) {
   if (pongrunning) 
   {
@@ -54,6 +57,8 @@ pongCanvas.addEventListener("click", function(e) {
   }
 });
 
+
+//Functions that only run when called
 function getMousePos(pongCanvas, e) {
   var rect = pongCanvas.getBoundingClientRect(); // abs. size of element
 
@@ -66,6 +71,11 @@ function getMousePos(pongCanvas, e) {
 //Functions
 function PongInitialiseGame()
 {	
+	 PongClear();
+	 if(typeof variable !== 'undefined') {
+			pongBall.draw();
+	}
+
 	pongmainText.draw();
 	pongscoreText.draw();	
 	PongStartButtonDraw();
@@ -111,6 +121,38 @@ function PongCreateBall(startX,startY,startVX,startVY, R,G,B,A){
   }
 };
 
+function PongStartButton(e)
+{	
+	if(e.x > PongStartButtonRectangleX && e.x < (PongStartButtonRectangleX + PongStartButtonRectangleWidth) && e.y > PongStartButtonRectangleY && e.y < (PongStartButtonRectangleY + PongStartButtonRectangleHeight) )
+	{
+		PongGameBeginDrawing();
+		pongrunning = true;
+	
+		PongStartGame();
+	}
+}
+
+function PongGameBeginDrawing() {
+  PongClear();
+  
+  pongBall.draw();
+  pongBall.update();
+  
+  pongmainText.draw();
+
+  pongscoreText.draw();
+  
+  pongraf = window.requestAnimationFrame(PongGameBeginDrawing); //Recursive - This is the drawing loop
+ 
+}
+
+function PongStartGame()
+{
+	pongTimedAreaFunction = setInterval(PongGameRunningLoop, pongGameIntervalSpeed); //This loops on interval
+	
+	PongSpawnBall();
+}
+
 function PongStartButtonDraw(){
 	
 	PongStartButtonText.draw();
@@ -118,7 +160,7 @@ function PongStartButtonDraw(){
 	pongContex.stroke(); 
 }
 
-function PongGameRunning()
+function PongGameRunningLoop()
 {
 	if(pongrunning)
 	{
@@ -147,7 +189,7 @@ function PongCheckMilliSeconds(time) //returns pongTicks based on milliseconds y
 
 function PongSpawnBall()
 {
-	if(pongrunning && typeof variable !== 'undefined')
+	if(pongrunning )
 	{
 		var newX = Math.floor(Math.random() * 400) + 50;
 		var newY = Math.floor(Math.random() * 250) + 50;
@@ -183,20 +225,6 @@ function PongTextObjects(fillText,colour,x,y,textSize)
 	}
 };
 
-function PongGameDraw() {
-
-  PongClear();
-  
-  pongBall.draw();
-  pongBall.update();
-  
-  pongmainText.draw();
-
-  pongscoreText.draw();
-  
-  pongraf = window.requestAnimationFrame(PongGameDraw);
-}
-
 function PongGameOver()
 {
 	if(pongrunning == false)
@@ -204,7 +232,7 @@ function PongGameOver()
 		return;
 	}
 	
-	PongBackground();
+	PongClear();
 	pongrunning = false;
 	PongStartButtonDraw();
 	
@@ -223,14 +251,8 @@ function PongGameOver()
 	window.cancelAnimationFrame(pongraf);
 }
 
-
 function PongClear() {
-  pongContex.fillStyle = 'rgba(255, 255, 255, 0.3)';
-  pongContex.fillRect(0,0,pongCanvas.width,pongCanvas.height);
-}
-
-function PongBackground() {
-  pongContex.fillStyle = 'rgba(185, 185, 0, 0.3)';
+  pongContex.fillStyle = backgroundColour;
   pongContex.fillRect(0,0,pongCanvas.width,pongCanvas.height);
 }
 
@@ -251,32 +273,17 @@ function PongBallCollision(otherX,otherY,ballX,ballY, ballRadius, tolerance)
 function PongMouseCollisionCheck()
 {
 	var tol = 0; //not used	
-	if(pongrunning /*&& PongBallCollision(pongLastMousePosition.x, pongLastMousePosition.y, pongBall.x, pongBall.y, pongBall.radius, tol) == true*/)
+	if(pongrunning/*&& PongBallCollision(pongLastMousePosition.x, pongLastMousePosition.y, pongBall.x, pongBall.y, pongBall.radius, tol) == true*/)
 	{
 		PongGameOver();
 	} 
 		
   };
 
-function PongStartGame()
-{
-	pongTimedAreaFunction = setInterval(PongGameRunning, pongGameIntervalSpeed);
-	PongSpawnBall();
-}
 
 function PongEndGame()
 {
 	clearInterval(pongTimedAreaFunction);
 }
 
-function PongStartButton(e)
-{	
-	if(e.x > PongStartButtonRectangleX && e.x < (PongStartButtonRectangleX + PongStartButtonRectangleWidth) && e.y > PongStartButtonRectangleY && e.y < (PongStartButtonRectangleY + PongStartButtonRectangleHeight) )
-	{
-		PongGameDraw();
-		pongrunning = true;
-	
-		PongStartGame();
-	}
-}
 
