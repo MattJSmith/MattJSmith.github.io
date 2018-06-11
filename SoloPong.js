@@ -9,21 +9,26 @@ var pongLastMousePosition;
 
 var pongCurrentScore = 0;
 var ponghighScore = 0;
+var paddleCount = 1;
 
 var pongmainText = new PongTextObjects("Solo Pong!",'black',10,30,20);
 
-var PongStartButtonRectangleX = 180;
-var PongStartButtonRectangleY = 110;
+var PongStartButtonRectangleX = 150;
+var PongStartButtonRectangleY = 80;
 var PongStartButtonRectangleWidth = 250;
 var PongStartButtonRectangleHeight = 60;
-var PongStartButtonText = new PongTextObjects("Begin!",'black',190,150,35);
+var PongStartButtonText = new PongTextObjects("Begin!",'black',220,120,35);
+
+var PongPaddleCountButtonRectangleX = 150;
+var PongPaddleCountButtonRectangleY = 160;
+var PongPaddleCountButtonRectangleWidth = 250;
+var PongPaddleCountButtonRectangleHeight = 60;
+var PongPaddleCountButtonText = new PongTextObjects("Paddles: " + paddleCount,'black',200,200,35);
 
 var pongLoseText = new PongTextObjects("You lost!",'red',200,80,50);
 var pongscoreText = new PongTextObjects("Current score: " + pongCurrentScore + "  | Best Attempt: " + ponghighScore ,'black',240,30,20);
 
 var pongBall;
-
-var paddleCount
 
 var pongBotPaddle;
 var pongTopPaddle;
@@ -35,7 +40,7 @@ var pongRightPaddle;
 //Set ammount of paddles/ saftey walls by a button like other game
 
 
-var backgroundColour = 'rgba(200, 225, 225, 1)';
+var pongBackgroundColour = 'rgba(150, 175, 175, 1)';
 
 //underlying logic variables
 var pongGameIntervalSpeed = 100; //in milliseconds
@@ -66,7 +71,8 @@ pongCanvas.addEventListener("click", function(e) {
 	pongLastMousePosition = getMousePos(pongCanvas,e);	  
 	
 	var currentPositionOnClick = getMousePos(pongCanvas,e);
-	PongStartButton(currentPositionOnClick);
+	PongStartButton(currentPositionOnClick);	
+	PongSetPaddleCountButton(currentPositionOnClick);
   }
 });
 
@@ -85,14 +91,11 @@ function getMousePos(pongCanvas, e) {
 function PongInitialiseGame()
 {	
 	PongClear();
-	
-	if(typeof variable !== 'undefined') {
-		pongBall.draw();
-	}
 
 	pongmainText.draw();
 	pongscoreText.draw();	
 	PongStartButtonDraw();
+	PongPaddleButtonDraw();
 }
 
 function PongCreateBall(startX,startY,startVX,startVY, R,G,B,A){
@@ -160,6 +163,25 @@ function PongStartButton(e)
 	}
 }
 
+function PongSetPaddleCountButton(e)
+{	
+	if(e.x > PongPaddleCountButtonRectangleX && e.x < (PongPaddleCountButtonRectangleX + PongPaddleCountButtonRectangleWidth) && e.y > PongPaddleCountButtonRectangleY && e.y < (PongPaddleCountButtonRectangleY + PongPaddleCountButtonRectangleHeight) )
+	{	
+			if(paddleCount == 1){ paddleCount = 2}
+			else if(paddleCount ==2){ paddleCount = 4}			
+			else if(paddleCount ==4){ paddleCount = 1}
+	}
+			
+		pongContex.clearRect(PongPaddleCountButtonRectangleX, PongPaddleCountButtonRectangleY, PongPaddleCountButtonRectangleWidth, PongPaddleCountButtonRectangleHeight);
+		pongContex.fillStyle = pongBackgroundColour;
+		pongContex.fillRect(PongPaddleCountButtonRectangleX, PongPaddleCountButtonRectangleY, PongPaddleCountButtonRectangleWidth, PongPaddleCountButtonRectangleHeight);
+
+		PongPaddleCountButtonText.updateText("Paddles: " + paddleCount);
+		PongPaddleCountButtonText.draw();
+}
+
+
+
 function PongGameBeginDrawing() {
   
   PongClear();
@@ -192,6 +214,13 @@ function PongStartButtonDraw(){
 	
 	PongStartButtonText.draw();
 	pongContex.rect(PongStartButtonRectangleX,PongStartButtonRectangleY,PongStartButtonRectangleWidth,PongStartButtonRectangleHeight);
+	pongContex.stroke(); 
+}
+
+function PongPaddleButtonDraw(){
+	
+	PongPaddleCountButtonText.draw();
+	pongContex.rect(PongPaddleCountButtonRectangleX,PongPaddleCountButtonRectangleY,PongPaddleCountButtonRectangleWidth,PongPaddleCountButtonRectangleHeight);
 	pongContex.stroke(); 
 }
 
@@ -269,7 +298,8 @@ function PongGameOver()
 	
 	PongClear();
 	pongrunning = false;
-	PongStartButtonDraw();
+	
+	PongInitialiseGame();
 	
 	pongLoseText.draw();
 
@@ -287,7 +317,7 @@ function PongGameOver()
 }
 
 function PongClear() {
-  pongContex.fillStyle = backgroundColour;
+  pongContex.fillStyle = pongBackgroundColour;
   pongContex.fillRect(0,0,pongCanvas.width,pongCanvas.height);
 }
 

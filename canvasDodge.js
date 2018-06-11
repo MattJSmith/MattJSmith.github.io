@@ -34,7 +34,7 @@ var ballSpawnSpeedSeconds;
 var ballSpawnRadius;
 var scoreDifficultyMultiplier;
 var ballSafeTIme;
-var backgroundColour = 'rgba(200, 225, 225, 1)';
+var backgroundColour = 'rgba(175, 200, 200, 1)';
 
 //underlying logic variables
 var gameIntervalSpeed = 100; //in milliseconds
