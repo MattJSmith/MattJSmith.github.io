@@ -134,8 +134,11 @@ function LoopPongGameDraw() {
   
   PongClear();
 	
-  pongTopPaddle.draw();
- 
+  if( pongTopPaddle != null) {pongTopPaddle.draw();}
+  if( pongBotPaddle != null) {pongBotPaddle.draw();}
+  if( pongLeftPaddle != null) {pongLeftPaddle.draw();}
+  if( pongRightPaddle != null) {pongRightPaddle.draw();}
+  
   pongBall.draw();
   
   pongmainText.draw();
@@ -151,7 +154,24 @@ function PongStartGame()
 	
 	PongSpawnBall();
 	
-	pongTopPaddle = new PongCreatePaddle(10,10, "horizontal");	
+	if(paddleCount == 1){
+		pongTopPaddle = new PongPaddleObject(10,10, "horizontal");			
+		pongBotPaddle = null;
+		pongLeftPaddle = null;	
+		pongRightPaddle = null;	
+	}
+	else if(paddleCount == 2){
+		pongTopPaddle = new PongPaddleObject(10,10, "horizontal");					
+		pongBotPaddle = new PongPaddleObject(10,(pongCanvas.height - 10), "horizontal");	
+		pongLeftPaddle = null;	
+		pongRightPaddle = null;	
+	}
+	else{
+		pongTopPaddle = new PongPaddleObject(10,10, "horizontal");					
+		pongBotPaddle = new PongPaddleObject(10,(pongCanvas.height - 10), "horizontal");	
+		pongLeftPaddle = new PongPaddleObject(10,10, "vertical");	
+		pongRightPaddle = new PongPaddleObject((pongCanvas.width - 10),10, "vertical");	
+	}
 }
 
 function PongStartButtonDraw(){
@@ -175,7 +195,7 @@ function LoopPongGameLogic()
 		pongTicks++;
 		PongCollisionWithPaddle();
 		CheckPongBallStillOnScreen();
-		if(PongCheckMilliSeconds(200))
+		if(PongCheckMilliSeconds(5000))
 		{
 			pongCurrentScore += 1;
 			
@@ -187,8 +207,12 @@ function LoopPongGameLogic()
 			pongTicks = 0;
 		}
 		pongBall.update();
-		pongTopPaddle.update();		
 		
+		if( pongTopPaddle != null) {pongTopPaddle.update();}			
+		if( pongBotPaddle != null) {pongBotPaddle.update();}	
+		if( pongLeftPaddle != null) {pongLeftPaddle.update();}	
+		if( pongRightPaddle != null) {pongRightPaddle.update();}	
+
 	}
 }
 
@@ -217,7 +241,7 @@ function PongSpawnBall()
 		var b = 255;
 		var a = 0.8;
 		
-		pongBall = new PongCreateBall(newX,newY,newVX,newVY,r,g,b,a);
+		pongBall = new PongBallObject(newX,newY,newVX,newVY,r,g,b,a);
 	}
 }
 
@@ -270,27 +294,57 @@ function PongClear() {
   pongContex.fillRect(0,0,pongCanvas.width,pongCanvas.height);
 }
 	
-function CheckBallAndTopPaddleCollision(){
-				
-	if( (pongBall.x) < pongTopPaddle.x && (pongBall.x) > pongTopPaddle.width && (pongBall.y) < pongTopPaddle.y && (pongBall.y) > pongTopPaddle.height) return false;
+function CheckBallAndPaddleCollisions(){
 
-	return true;
+	if( pongTopPaddle != null)
+	{
+		if(pongBall.x < pongTopPaddle.x + pongTopPaddle.width &&
+		   pongBall.x + pongBall.radius > pongTopPaddle.x &&
+		   pongBall.y < pongTopPaddle.y + pongTopPaddle.height &&
+		   pongBall.radius + pongBall.y > pongTopPaddle.y) {
+			   pongBall.vy = Math.abs(pongBall.vy);
+			   }	
+	}
+		if( pongBotPaddle != null)
+	{
+		if(pongBall.x < pongBotPaddle.x + pongBotPaddle.width &&
+		   pongBall.x + pongBall.radius > pongBotPaddle.x &&
+		   pongBall.y < pongBotPaddle.y + pongBotPaddle.height &&
+		   pongBall.radius + pongBall.y > pongBotPaddle.y) {
+			     pongBall.vy = -Math.abs(pongBall.vy);
+			   }	
+	}
+	if( pongLeftPaddle != null)
+	{
+		if(pongBall.x < pongLeftPaddle.x + pongLeftPaddle.width &&
+		   pongBall.x + pongBall.radius > pongLeftPaddle.x &&
+		   pongBall.y < pongLeftPaddle.y + pongLeftPaddle.height &&
+		   pongBall.radius + pongBall.y > pongLeftPaddle.y) {
+			     pongBall.vx = Math.abs(pongBall.vx);
+			   }	
+	}
+	if( pongRightPaddle != null)
+	{
+		if(pongBall.x < pongRightPaddle.x + pongRightPaddle.width &&
+		   pongBall.x + pongBall.radius > pongRightPaddle.x &&
+		   pongBall.y < pongRightPaddle.y + pongRightPaddle.height &&
+		   pongBall.radius + pongBall.y > pongRightPaddle.y) {
+			   pongBall.vx = -Math.abs(pongBall.vx);
+			   }	
+	}	
+     
+	return false;
 };
 	
 function PongCollisionWithPaddle()
 {
-
 	if(pongrunning)
 	{
-		if(CheckBallAndTopPaddleCollision()) {
-			pongBall.changeVX();
-			pongBall.changeVY();
-			}
-
+		CheckBallAndPaddleCollisions();		
 	} 		
  };
  
- function PongCreateBall(startX,startY,startVX,startVY, R,G,B,A){
+ function PongBallObject(startX,startY,startVX,startVY, R,G,B,A){
 	
   this.x = startX;
   this.y = startY;
@@ -316,32 +370,38 @@ function PongCollisionWithPaddle()
     pongContex.stroke();
   };
   
-  this.changeVX = function(){	this.vx = -this.vx;}
-    this.changeVY = function(){	this.vy = -this.vy;}
+  this.changeVX = function(){	
+	this.vx = -this.vx;
+  };
+  
+  this.changeVY = function(){	
+	this.vy = -this.vy;
+  };
+  
   this.update = function()
-	  {
+	{
 		this.x += this.vx;
 		this.y += this.vy;
-		this.vx *= 1.0001;
-		this.vy *= 1.0001;
+		this.vx *= 1.00001;
+		this.vy *= 1.00001;
 		
-		if (this.y + this.vy > pongCanvas.height && typeof pongBotPaddle == 'undefined') {
+		if (this.y + this.vy > pongCanvas.height && pongBotPaddle == null) {
 			this.vy = -this.vy;
 		}
-		else if ( this.y + this.vy < 0 && typeof pongTopPaddle == 'undefined') {
+		if ( this.y + this.vy < 0 && pongTopPaddle == null) {
 			this.vy = -this.vy;
 	    }
 	  
-		if (this.x + this.vx > pongCanvas.width && typeof pongRightPaddle == 'undefined') {
+		if (this.x + this.vx > pongCanvas.width && pongRightPaddle == null) {
 			this.vx = -this.vx;
 		}   
-		else if ( this.x + this.vx < 0 && typeof pongLeftPaddle == 'undefined') {
+		if ( this.x + this.vx < 0 && pongLeftPaddle == null) {
 			this.vx = -this.vx;
 		} 
-  }
+	};
 };
  
-function PongCreatePaddle(startX,startY, orientation){
+function PongPaddleObject(startX,startY, orientation){
 	
   this.x = startX;
   this.y = startY;
@@ -358,8 +418,8 @@ function PongCreatePaddle(startX,startY, orientation){
 
   this.colorR = 0,
   this.colorG = 0,
-  this.colorB = 0,
-  this.colorA = 1,
+  this.colorB = 100,
+  this.colorA = 0.5,
   
   this.draw = function() {
 	  
@@ -379,14 +439,13 @@ function PongCreatePaddle(startX,startY, orientation){
 		   if(typeof pongLastMousePosition !== 'undefined') {
 			   
 			   if(orientation == 'horizontal'){
-				   this.x = pongLastMousePosition.x;
+				   this.x = pongLastMousePosition.x - (this.width /2);
 			   }
 			   
 			   if(orientation == 'vertical'){
-				   this.y = pongLastMousePosition.y;
+				   this.y = pongLastMousePosition.y - (this.height /2);
 			   }				
-		}
-		  
+		}	  
     }
 };
  
