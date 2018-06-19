@@ -27,7 +27,7 @@ var PongPaddleCountButtonText = new PongTextObjects("Paddles: " + paddleCount,'b
 
 var pongLoseText = new PongTextObjects("You lost!",'red',200,80,50);
 var pongscoreText = new PongTextObjects("Current score: " + pongCurrentScore + "  | Best Attempt: " + ponghighScore ,'black',240,30,20);
-
+var pongPauseText = new PongTextObjects("Paused","rgba(40, 40, 40, 0.5)",200,150,50);
 var pongBall;
 
 var pongBotPaddle;
@@ -78,7 +78,6 @@ pongCanvas.addEventListener("click", function(e) {
 	PongSetPaddleCountButton(currentPositionOnClick);
   }
 });
-
 
 //Functions that only run when called
 function getMousePos(pongCanvas, e) {
@@ -132,20 +131,60 @@ function PongSetPaddleCountButton(e)
 
 function LoopPongGameDraw() {
   
-  PongClear();
-	
-  if( pongTopPaddle != null) {pongTopPaddle.draw();}
-  if( pongBotPaddle != null) {pongBotPaddle.draw();}
-  if( pongLeftPaddle != null) {pongLeftPaddle.draw();}
-  if( pongRightPaddle != null) {pongRightPaddle.draw();}
-  
-  pongBall.draw();
-  
-  pongmainText.draw();
+	PongClear();
 
-  pongscoreText.draw();
-  
-  pongraf = window.requestAnimationFrame(LoopPongGameDraw); //Recursive - This is the drawing loop
+	if( pongTopPaddle != null) {pongTopPaddle.draw();}
+	if( pongBotPaddle != null) {pongBotPaddle.draw();}
+	if( pongLeftPaddle != null) {pongLeftPaddle.draw();}
+	if( pongRightPaddle != null) {pongRightPaddle.draw();}
+
+	pongBall.draw();
+	
+	if(pongGamePaused){
+		
+		pongPauseText.draw();
+	}
+	
+	pongmainText.draw();
+
+	pongscoreText.draw();
+	
+	pongraf = window.requestAnimationFrame(LoopPongGameDraw); //Recursive - This is the drawing loop
+}
+
+function LoopPongGameLogic()
+{
+	if(pongrunning && !pongGamePaused)
+	{
+		pongTicks++;
+		PongCollisionWithPaddle();
+		CheckPongBallStillOnScreen();
+		if(PongCheckMilliSeconds(5000))
+		{
+			pongCurrentScore += 1;
+			
+			if(pongCurrentScore > ponghighScore){
+				ponghighScore = pongCurrentScore;
+				}
+			
+			pongscoreText.updateText("Current score: " + pongCurrentScore + "  | Best Attempt: " + ponghighScore );
+			pongTicks = 0;
+		}
+		pongBall.update();
+		
+		if( pongTopPaddle != null) {pongTopPaddle.update();}			
+		if( pongBotPaddle != null) {pongBotPaddle.update();}	
+		if( pongLeftPaddle != null) {pongLeftPaddle.update();}	
+		if( pongRightPaddle != null) {pongRightPaddle.update();}	
+	}
+}
+
+function PongCheckMilliSeconds(time) //returns pongTicks based on milliseconds you want
+{
+	var result = (pongTicks % (time / 100));
+	
+	if(result == 0){return true;}
+	return false;
 }
 
 function PongStartGame()
@@ -188,42 +227,6 @@ function PongPaddleButtonDraw(){
 	pongContex.stroke(); 
 }
 
-function LoopPongGameLogic()
-{
-	if(pongrunning && !pongGamePaused)
-	{
-		pongTicks++;
-		PongCollisionWithPaddle();
-		CheckPongBallStillOnScreen();
-		if(PongCheckMilliSeconds(5000))
-		{
-			pongCurrentScore += 1;
-			
-			if(pongCurrentScore > ponghighScore){
-				ponghighScore = pongCurrentScore;
-				}
-			
-			pongscoreText.updateText("Current score: " + pongCurrentScore + "  | Best Attempt: " + ponghighScore );
-			pongTicks = 0;
-		}
-		pongBall.update();
-		
-		if( pongTopPaddle != null) {pongTopPaddle.update();}			
-		if( pongBotPaddle != null) {pongBotPaddle.update();}	
-		if( pongLeftPaddle != null) {pongLeftPaddle.update();}	
-		if( pongRightPaddle != null) {pongRightPaddle.update();}	
-
-	}
-}
-
-function PongCheckMilliSeconds(time) //returns pongTicks based on milliseconds you want
-{
-	var result = (pongTicks % (time / 100));
-	
-	if(result == 0){return true;}
-	return false;
-}
-
 function PongSpawnBall()
 {
 	if(pongrunning)
@@ -244,23 +247,6 @@ function PongSpawnBall()
 		pongBall = new PongBallObject(newX,newY,newVX,newVY,r,g,b,a);
 	}
 }
-
-function PongTextObjects(fillText,colour,x,y,textSize)
-{
-	this.x = x;
-	this.y = y;
-	this.viewingText= fillText;
-	
-	this.draw = function() {
-		pongContex.font= textSize + "px Georgia";
-		pongContex.fillStyle = colour;
-		pongContex.fillText(this.viewingText,x,y);	
-	};
-	this.updateText = function(newText)
-	{
-		this.viewingText = newText;
-	}
-};
 
 function PongGameOver()
 {
@@ -341,6 +327,28 @@ function PongCollisionWithPaddle()
 	if(pongrunning)
 	{
 		CheckBallAndPaddleCollisions();		
+	} 		
+ };
+ 
+ function CheckPongBallStillOnScreen()
+{
+	if(pongrunning)
+	{
+		if(pongBall.y + pongBall.vy > pongCanvas.height){
+			PongGameOver();
+		}
+			
+	    if (pongBall.y + pongBall.vy < 0) {
+			PongGameOver();
+	    }
+	  
+		if (pongBall.x + pongBall.vx > pongCanvas.width) {
+			PongGameOver();
+		}
+	  
+		if (pongBall.x + pongBall.vx < 0) {
+			PongGameOver();
+		}
 	} 		
  };
  
@@ -448,28 +456,23 @@ function PongPaddleObject(startX,startY, orientation){
 		}	  
     }
 };
- 
-function CheckPongBallStillOnScreen()
+
+ function PongTextObjects(fillText,colour,x,y,textSize)
 {
-	if(pongrunning)
+	this.x = x;
+	this.y = y;
+	this.viewingText= fillText;
+	
+	this.draw = function() {
+		pongContex.font= textSize + "px Georgia";
+		pongContex.fillStyle = colour;
+		pongContex.fillText(this.viewingText,x,y);	
+	};
+	this.updateText = function(newText)
 	{
-		if(pongBall.y + pongBall.vy > pongCanvas.height){
-			PongGameOver();
-		}
-			
-	    if (pongBall.y + pongBall.vy < 0) {
-			PongGameOver();
-	    }
-	  
-		if (pongBall.x + pongBall.vx > pongCanvas.width) {
-			PongGameOver();
-		}
-	  
-		if (pongBall.x + pongBall.vx < 0) {
-			PongGameOver();
-		}
-	} 		
- };
+		this.viewingText = newText;
+	}
+};
 
 function PongEndGame()
 {
