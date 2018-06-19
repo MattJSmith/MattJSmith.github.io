@@ -1,11 +1,7 @@
 var canvas = document.getElementById('ballStage');
 var contex = canvas.getContext('2d');
 var raf; // request animation frame
-var pongCanvas = document.getElementById('SoloPong');
-var pongContex = pongCanvas.getContext('2d');
-var pongraf; // request animation frame
 
-//***** Canvas Dodge Variables *****
 //actual game objects and game logic variables
 var running = false;
 
@@ -26,11 +22,10 @@ var difRectY = 200;
 var difRectWidth = 250;
 var difRectHeight = 60;
 
+var pickLevelText = "Pick Level: ";
+
 var startButtonText = new textObject("Click to begin!",'black',190,150,35);
-var pickLevelText = "Pick Level: "
-
 var difficultyButtonText = new textObject(pickLevelText + difficulty,'black',190,250,35);
-
 
 var loseText = new textObject("You lost!",'red',200,80,50);
 var scoreText = new textObject("Current score: " + currentScore + "  | Best Attempt: " + highestScore ,'black',240,30,20);
@@ -39,6 +34,7 @@ var ballSpawnSpeedSeconds;
 var ballSpawnRadius;
 var scoreDifficultyMultiplier;
 var ballSafeTIme;
+var backgroundColour = 'rgba(175, 200, 200, 1)';
 
 //underlying logic variables
 var gameIntervalSpeed = 100; //in milliseconds
@@ -49,55 +45,14 @@ var timedAreaFunction;
 
 var lastMousePos; //Position of mouse from last movement event
 
-//code starts here
-setDifficulty(1);
-
 var ballArray = []; //only lines needed to add more balls
 
-//***** SOLO PONG VARIABLES *****
-//actual game objects and game logic variables
-var pongrunning = false;
-
-var pongLastMousePosition;
-
-var pongCurrentScore = 0;
-var ponghighScore = 0;
-
-var pongmainText = new PongTextObjects("Solo Pong!",'black',10,30,20);
-
-var PongStartButtonRectangleX = 180;
-var PongStartButtonRectangleY = 110;
-var PongStartButtonRectangleWidth = 250;
-var PongStartButtonRectangleHeight = 60;
-var PongStartButtonText = new PongTextObjects("Begin!",'black',190,150,35);
-
-var pongLoseText = new PongTextObjects("You lost!",'red',200,80,50);
-var pongscoreText = new PongTextObjects("Current score: " + pongCurrentScore + "  | Best Attempt: " + ponghighScore ,'black',240,30,20);
-
-var pongBall;
-
-//underlying logic variables
-var pongGameIntervalSpeed = 100; //in milliseconds
-
-var pongTicks = 0; //counter based off the pongGameIntervalSpeed
-
-var pongTimedAreaFunction;
-
-//Start Game
+//Code that gets run:
+setDifficulty(1);
 
 initialiseGame();
 
-PongInitialiseGame();
-
-function  getMousePos(canvas, e) {
-  var rect = canvas.getBoundingClientRect(); // abs. size of element
-
-  return {
-    x: (e.clientX - rect.left),   // scale mouse coordinates after they have
-    y: (e.clientY - rect.top)     // been adjusted to be relative to element
-  }
-};
-
+//Events that apply
 canvas.addEventListener('mousemove', function(e) {
   if (running) 
   {
@@ -116,11 +71,33 @@ canvas.addEventListener("click", function(e) {
   if (!running) {
 	
 	var realMousePos = getMousePos(canvas,e);
+	
 	startButton(realMousePos);
 	
 	difficultyButton(realMousePos);
   }
 });
+
+//Functions that get called (But not running till called)
+function initialiseGame()
+{
+	clear();
+	mainText.draw();
+	scoreText.draw();
+	
+	startButtonDraw();
+	difficultyButtonDraw();
+}
+
+function  getMousePos(canvas, e) {
+  var rect = canvas.getBoundingClientRect(); // abs. size of element
+
+  return {
+    x: (e.clientX - rect.left),   // scale mouse coordinates after they have
+    y: (e.clientY - rect.top)     // been adjusted to be relative to element
+  }
+};
+
 function mouseCollisionCheck()
 {
 	ballArray.forEach(function(ballItem){
@@ -180,18 +157,6 @@ function setDifficulty(newDifficulty)
 }
 
 
-function initialiseGame()
-{
-	 ballArray.forEach(function(ballItem){
-		ballItem.draw();
-	});
-
-	mainText.draw();
-	scoreText.draw();
-	
-	startButtonDraw();
-	difficultyButtonDraw();
-}
 
 function newBall(startX,startY,startVX,startVY,startRadius, R,G,B,A, startSpawnSafeTime){
   this.x = startX;
@@ -247,7 +212,7 @@ function startButtonDraw(){
 	contex.stroke(); 
 }
 
-function gameRunning()
+function GameRunningLoop()
 {
 	ticks++;
 	
@@ -360,7 +325,7 @@ function randomHexColour()
 	
 }
 
-function canvasDodgeGameDraw() {
+function CanvasDodgeGameBeginDrawing() {
 
   clear();
   
@@ -373,7 +338,7 @@ function canvasDodgeGameDraw() {
 
   scoreText.draw();
   
-  raf = window.requestAnimationFrame(canvasDodgeGameDraw);
+  raf = window.requestAnimationFrame(CanvasDodgeGameBeginDrawing);
 }
 
 function gameOver()
@@ -383,7 +348,7 @@ function gameOver()
 		return;
 	}
 	
-	background();
+	clear();
 	running = false;
 	startButtonDraw();
 	difficultyButtonDraw();
@@ -403,14 +368,8 @@ function gameOver()
 	window.cancelAnimationFrame(raf);
 }
 
-
 function clear() {
-  contex.fillStyle = 'rgba(255, 255, 255, 0.3)';
-  contex.fillRect(0,0,canvas.width,canvas.height);
-}
-
-function background() {
-  contex.fillStyle = 'rgba(185, 185, 0, 0.3)';
+  contex.fillStyle = backgroundColour;
   contex.fillRect(0,0,canvas.width,canvas.height);
 }
 
@@ -427,14 +386,13 @@ function ballCollision(otherX,otherY,ballX,ballY, ballRadius, tolerance)
 	return false;
   }
 }
-
-
 	
 function startGame()
 {
-	timedAreaFunction = setInterval(gameRunning, gameIntervalSpeed);
 	addNewBall();
 	addNewBall();
+	
+	timedAreaFunction = setInterval(GameRunningLoop, gameIntervalSpeed);
 }
 
 function endGame()
@@ -447,7 +405,6 @@ function difficultyButton(e)
 	
 	if(e.x > difRectX && e.x < (difRectX + difRectWidth) && e.y > difRectY && e.y < (difRectY + difRectHeight) )
 	{
-		//do stuff	
 		if(difficulty >= 4)
 		{
 			difficulty = 1;		
@@ -460,6 +417,9 @@ function difficultyButton(e)
 		setDifficulty(difficulty);
 		
 		contex.clearRect(difRectX, difRectY, difRectWidth, difRectHeight);
+		contex.fillStyle = backgroundColour;
+		contex.fillRect(difRectX,difRectY,difRectWidth,difRectHeight);
+		  
 		difficultyButtonText.updateText(pickLevelText + difficulty);
 		difficultyButtonText.draw();
 		window.cancelAnimationFrame(raf);
@@ -468,16 +428,70 @@ function difficultyButton(e)
 
 function startButton(e)
 {	
-
 	if(e.x > startRectX && e.x < (startRectX + startRectWidth) && e.y > startRectY && e.y < (startRectY + startRectHeight) )
-	{
-		canvasDodgeGameDraw();
+	{	
 		running = true;
-	
+		CanvasDodgeGameBeginDrawing();	
 		startGame();
 	}
 }
 
+var pongCanvas = document.getElementById('SoloPong');
+var pongContex = pongCanvas.getContext('2d');
+var pongraf; // request animation frame
+
+//actual game objects and game logic variables
+var pongrunning = false;
+
+var pongLastMousePosition;
+
+var pongCurrentScore = 0;
+var ponghighScore = 0;
+var paddleCount = 1;
+
+var pongmainText = new PongTextObjects("Solo Pong!",'black',10,30,20);
+
+var PongStartButtonRectangleX = 150;
+var PongStartButtonRectangleY = 80;
+var PongStartButtonRectangleWidth = 250;
+var PongStartButtonRectangleHeight = 60;
+var PongStartButtonText = new PongTextObjects("Begin!",'black',220,120,35);
+
+var PongPaddleCountButtonRectangleX = 150;
+var PongPaddleCountButtonRectangleY = 160;
+var PongPaddleCountButtonRectangleWidth = 250;
+var PongPaddleCountButtonRectangleHeight = 60;
+var PongPaddleCountButtonText = new PongTextObjects("Paddles: " + paddleCount,'black',200,200,35);
+
+var pongLoseText = new PongTextObjects("You lost!",'red',200,80,50);
+var pongscoreText = new PongTextObjects("Current score: " + pongCurrentScore + "  | Best Attempt: " + ponghighScore ,'black',240,30,20);
+var pongPauseText = new PongTextObjects("Paused","rgba(40, 40, 40, 0.5)",200,150,50);
+var pongBall;
+
+var pongBotPaddle;
+var pongTopPaddle;
+var pongLeftPaddle;
+var pongRightPaddle;
+
+var pongGamePaused = false;
+//Have a Choice of how many paddles (one per wall).
+//Draw an outline on walls without paddles to show the ball will bounce off of these
+//Set ammount of paddles/ saftey walls by a button like other game
+
+var pongBackgroundColour = 'rgba(150, 175, 175, 1)';
+
+//underlying logic variables
+var pongGameIntervalSpeed = 1; //in milliseconds
+
+var pongTicks = 0; //counter based off the pongGameIntervalSpeed
+
+var pongLoopReference;
+
+//Start Game - Actual Code that is running
+
+PongInitialiseGame();
+
+//Events that are active at start
 pongCanvas.addEventListener('mousemove', function(e) {
   if (pongrunning) 
   {
@@ -486,18 +500,24 @@ pongCanvas.addEventListener('mousemove', function(e) {
 });
 
 pongCanvas.addEventListener("mouseout", function(e) {
-		PongGameOver();
+		Pause();
+});
+pongCanvas.addEventListener("mouseover", function(e) {
+		UnPause();
 });
 
 pongCanvas.addEventListener("click", function(e) {
 	
   if (!pongrunning) {
+	pongLastMousePosition = getMousePos(pongCanvas,e);	  
 	
-	var realMousePos = getMousePos(pongCanvas,e);
-	PongStartButton(realMousePos);
+	var currentPositionOnClick = getMousePos(pongCanvas,e);
+	PongStartButton(currentPositionOnClick);	
+	PongSetPaddleCountButton(currentPositionOnClick);
   }
 });
 
+//Functions that only run when called
 function getMousePos(pongCanvas, e) {
   var rect = pongCanvas.getBoundingClientRect(); // abs. size of element
 
@@ -510,12 +530,267 @@ function getMousePos(pongCanvas, e) {
 //Functions
 function PongInitialiseGame()
 {	
+	PongClear();
+
 	pongmainText.draw();
 	pongscoreText.draw();	
 	PongStartButtonDraw();
+	PongPaddleButtonDraw();
 }
 
-function PongCreateBall(startX,startY,startVX,startVY, R,G,B,A){
+function PongStartButton(e)
+{	
+	if(e.x > PongStartButtonRectangleX && e.x < (PongStartButtonRectangleX + PongStartButtonRectangleWidth) && e.y > PongStartButtonRectangleY && e.y < (PongStartButtonRectangleY + PongStartButtonRectangleHeight) )
+	{	
+		pongrunning = true;	
+		
+		PongStartGame();
+
+		LoopPongGameDraw();	
+	}
+}
+
+function PongSetPaddleCountButton(e)
+{	
+	if(e.x > PongPaddleCountButtonRectangleX && e.x < (PongPaddleCountButtonRectangleX + PongPaddleCountButtonRectangleWidth) && e.y > PongPaddleCountButtonRectangleY && e.y < (PongPaddleCountButtonRectangleY + PongPaddleCountButtonRectangleHeight) )
+	{	
+			if(paddleCount == 1){ paddleCount = 2}
+			else if(paddleCount ==2){ paddleCount = 4}			
+			else if(paddleCount ==4){ paddleCount = 1}
+	}
+			
+		pongContex.clearRect(PongPaddleCountButtonRectangleX, PongPaddleCountButtonRectangleY, PongPaddleCountButtonRectangleWidth, PongPaddleCountButtonRectangleHeight);
+		pongContex.fillStyle = pongBackgroundColour;
+		pongContex.fillRect(PongPaddleCountButtonRectangleX, PongPaddleCountButtonRectangleY, PongPaddleCountButtonRectangleWidth, PongPaddleCountButtonRectangleHeight);
+
+		PongPaddleCountButtonText.updateText("Paddles: " + paddleCount);
+		PongPaddleCountButtonText.draw();
+}
+
+function LoopPongGameDraw() {
+  
+	PongClear();
+
+	if( pongTopPaddle != null) {pongTopPaddle.draw();}
+	if( pongBotPaddle != null) {pongBotPaddle.draw();}
+	if( pongLeftPaddle != null) {pongLeftPaddle.draw();}
+	if( pongRightPaddle != null) {pongRightPaddle.draw();}
+
+	pongBall.draw();
+	
+	if(pongGamePaused){
+		
+		pongPauseText.draw();
+	}
+	
+	pongmainText.draw();
+
+	pongscoreText.draw();
+	
+	pongraf = window.requestAnimationFrame(LoopPongGameDraw); //Recursive - This is the drawing loop
+}
+
+function LoopPongGameLogic()
+{
+	if(pongrunning && !pongGamePaused)
+	{
+		pongTicks++;
+		PongCollisionWithPaddle();
+		CheckPongBallStillOnScreen();
+		if(PongCheckMilliSeconds(5000))
+		{
+			pongCurrentScore += 1;
+			
+			if(pongCurrentScore > ponghighScore){
+				ponghighScore = pongCurrentScore;
+				}
+			
+			pongscoreText.updateText("Current score: " + pongCurrentScore + "  | Best Attempt: " + ponghighScore );
+			pongTicks = 0;
+		}
+		pongBall.update();
+		
+		if( pongTopPaddle != null) {pongTopPaddle.update();}			
+		if( pongBotPaddle != null) {pongBotPaddle.update();}	
+		if( pongLeftPaddle != null) {pongLeftPaddle.update();}	
+		if( pongRightPaddle != null) {pongRightPaddle.update();}	
+	}
+}
+
+function PongCheckMilliSeconds(time) //returns pongTicks based on milliseconds you want
+{
+	var result = (pongTicks % (time / 100));
+	
+	if(result == 0){return true;}
+	return false;
+}
+
+function PongStartGame()
+{
+	pongLoopReference = setInterval(LoopPongGameLogic, pongGameIntervalSpeed); //This loops on interval
+	
+	PongSpawnBall();
+	
+	if(paddleCount == 1){
+		pongTopPaddle = new PongPaddleObject(10,10, "horizontal");			
+		pongBotPaddle = null;
+		pongLeftPaddle = null;	
+		pongRightPaddle = null;	
+	}
+	else if(paddleCount == 2){
+		pongTopPaddle = new PongPaddleObject(10,10, "horizontal");					
+		pongBotPaddle = new PongPaddleObject(10,(pongCanvas.height - 10), "horizontal");	
+		pongLeftPaddle = null;	
+		pongRightPaddle = null;	
+	}
+	else{
+		pongTopPaddle = new PongPaddleObject(10,10, "horizontal");					
+		pongBotPaddle = new PongPaddleObject(10,(pongCanvas.height - 10), "horizontal");	
+		pongLeftPaddle = new PongPaddleObject(10,10, "vertical");	
+		pongRightPaddle = new PongPaddleObject((pongCanvas.width - 10),10, "vertical");	
+	}
+}
+
+function PongStartButtonDraw(){
+	
+	PongStartButtonText.draw();
+	pongContex.rect(PongStartButtonRectangleX,PongStartButtonRectangleY,PongStartButtonRectangleWidth,PongStartButtonRectangleHeight);
+	pongContex.stroke(); 
+}
+
+function PongPaddleButtonDraw(){
+	
+	PongPaddleCountButtonText.draw();
+	pongContex.rect(PongPaddleCountButtonRectangleX,PongPaddleCountButtonRectangleY,PongPaddleCountButtonRectangleWidth,PongPaddleCountButtonRectangleHeight);
+	pongContex.stroke(); 
+}
+
+function PongSpawnBall()
+{
+	if(pongrunning)
+	{
+		var newX = Math.floor(Math.random() * 300) + 50;
+		var newY = Math.floor(Math.random() * 150) + 50;
+		var newVX = 1.2;
+		var newVY = 0.8;
+
+		if(newVX == 0){ newVX = 1;}
+		if(newVY == 0){ newVY = 1;}
+		
+		var r = 255;
+		var g = 255;
+		var b = 255;
+		var a = 0.8;
+		
+		pongBall = new PongBallObject(newX,newY,newVX,newVY,r,g,b,a);
+	}
+}
+
+function PongGameOver()
+{
+	if(pongrunning == false)
+	{
+		return;
+	}
+	
+	PongClear();
+	pongrunning = false;
+	
+	PongInitialiseGame();
+	
+	pongLoseText.draw();
+
+	PongEndGame();
+
+	if(pongCurrentScore > ponghighScore){
+		ponghighScore = pongCurrentScore;
+		}
+	
+	pongCurrentScore = 0;
+	
+	pongscoreText.updateText("Current score: " + pongCurrentScore + "  | Best Attempt: " + ponghighScore );
+	
+	window.cancelAnimationFrame(pongraf);
+}
+
+function PongClear() {
+  pongContex.fillStyle = pongBackgroundColour;
+  pongContex.fillRect(0,0,pongCanvas.width,pongCanvas.height);
+}
+	
+function CheckBallAndPaddleCollisions(){
+
+	if( pongTopPaddle != null)
+	{
+		if(pongBall.x < pongTopPaddle.x + pongTopPaddle.width &&
+		   pongBall.x + pongBall.radius > pongTopPaddle.x &&
+		   pongBall.y < pongTopPaddle.y + pongTopPaddle.height &&
+		   pongBall.radius + pongBall.y > pongTopPaddle.y) {
+			   pongBall.vy = Math.abs(pongBall.vy);
+			   }	
+	}
+		if( pongBotPaddle != null)
+	{
+		if(pongBall.x < pongBotPaddle.x + pongBotPaddle.width &&
+		   pongBall.x + pongBall.radius > pongBotPaddle.x &&
+		   pongBall.y < pongBotPaddle.y + pongBotPaddle.height &&
+		   pongBall.radius + pongBall.y > pongBotPaddle.y) {
+			     pongBall.vy = -Math.abs(pongBall.vy);
+			   }	
+	}
+	if( pongLeftPaddle != null)
+	{
+		if(pongBall.x < pongLeftPaddle.x + pongLeftPaddle.width &&
+		   pongBall.x + pongBall.radius > pongLeftPaddle.x &&
+		   pongBall.y < pongLeftPaddle.y + pongLeftPaddle.height &&
+		   pongBall.radius + pongBall.y > pongLeftPaddle.y) {
+			     pongBall.vx = Math.abs(pongBall.vx);
+			   }	
+	}
+	if( pongRightPaddle != null)
+	{
+		if(pongBall.x < pongRightPaddle.x + pongRightPaddle.width &&
+		   pongBall.x + pongBall.radius > pongRightPaddle.x &&
+		   pongBall.y < pongRightPaddle.y + pongRightPaddle.height &&
+		   pongBall.radius + pongBall.y > pongRightPaddle.y) {
+			   pongBall.vx = -Math.abs(pongBall.vx);
+			   }	
+	}	
+     
+	return false;
+};
+	
+function PongCollisionWithPaddle()
+{
+	if(pongrunning)
+	{
+		CheckBallAndPaddleCollisions();		
+	} 		
+ };
+ 
+ function CheckPongBallStillOnScreen()
+{
+	if(pongrunning)
+	{
+		if(pongBall.y + pongBall.vy > pongCanvas.height){
+			PongGameOver();
+		}
+			
+	    if (pongBall.y + pongBall.vy < 0) {
+			PongGameOver();
+	    }
+	  
+		if (pongBall.x + pongBall.vx > pongCanvas.width) {
+			PongGameOver();
+		}
+	  
+		if (pongBall.x + pongBall.vx < 0) {
+			PongGameOver();
+		}
+	} 		
+ };
+ 
+ function PongBallObject(startX,startY,startVX,startVY, R,G,B,A){
 	
   this.x = startX;
   this.y = startY;
@@ -541,76 +816,86 @@ function PongCreateBall(startX,startY,startVX,startVY, R,G,B,A){
     pongContex.stroke();
   };
   
+  this.changeVX = function(){	
+	this.vx = -this.vx;
+  };
+  
+  this.changeVY = function(){	
+	this.vy = -this.vy;
+  };
+  
   this.update = function()
-	  {
+	{
 		this.x += this.vx;
 		this.y += this.vy;
-
-	  if (this.y + this.vy > pongCanvas.height || this.y + this.vy < 0) {
-		this.vy = -this.vy;
-	  }
-	  if (this.x + this.vx > pongCanvas.width || this.x + this.vx < 0) {
-		this.vx = -this.vx;
-	  }
+		this.vx *= 1.00001;
+		this.vy *= 1.00001;
+		
+		if (this.y + this.vy > pongCanvas.height && pongBotPaddle == null) {
+			this.vy = -this.vy;
+		}
+		if ( this.y + this.vy < 0 && pongTopPaddle == null) {
+			this.vy = -this.vy;
+	    }
+	  
+		if (this.x + this.vx > pongCanvas.width && pongRightPaddle == null) {
+			this.vx = -this.vx;
+		}   
+		if ( this.x + this.vx < 0 && pongLeftPaddle == null) {
+			this.vx = -this.vx;
+		} 
+	};
+};
+ 
+function PongPaddleObject(startX,startY, orientation){
+	
+  this.x = startX;
+  this.y = startY;
+  this.orientation = orientation;
+  
+  if(orientation == "horizontal"){
+	this.width = 100;
+	this.height = 30;
   }
+  if(orientation == "vertical"){
+	this.width = 30;
+	this.height = 100;
+  }
+
+  this.colorR = 0,
+  this.colorG = 0,
+  this.colorB = 100,
+  this.colorA = 0.5,
+  
+  this.draw = function() {
+	  
+    pongContex.rect(this.x, this.y, this.width, this.height);
+	
+	var color = "rgba(" + this.colorR + ", " + this.colorG + ", " + this.colorB + ", " + this.colorA + ")";
+    pongContex.fillStyle = color;
+    pongContex.fill();
+	
+	pongContex.lineWidth = 1;
+    pongContex.strokeStyle = 'rgba(5,5,5,0.1)';
+    pongContex.stroke();
+  };
+  
+  this.update = function()
+	{
+		   if(typeof pongLastMousePosition !== 'undefined') {
+			   
+			   if(orientation == 'horizontal'){
+				   this.x = pongLastMousePosition.x - (this.width /2);
+			   }
+			   
+			   if(orientation == 'vertical'){
+				   this.y = pongLastMousePosition.y - (this.height /2);
+			   }				
+		}	  
+    }
 };
 
-function PongStartButtonDraw(){
-	
-	PongStartButtonText.draw();
-	pongContex.rect(PongStartButtonRectangleX,PongStartButtonRectangleY,PongStartButtonRectangleWidth,PongStartButtonRectangleHeight);
-	pongContex.stroke(); 
-}
-
-function PongGameRunning()
-{
-	if(pongrunning)
-	{
-		pongTicks++;
-		PongMouseCollisionCheck();
-		
-		if(PongCheckMilliSeconds(200))
-		{
-			pongCurrentScore += 1;
-			
-			if(pongCurrentScore > ponghighScore){ponghighScore = pongCurrentScore;}
-			
-			pongscoreText.updateText("Current score: " + pongCurrentScore + "  | Best Attempt: " + ponghighScore );
-			pongTicks = 0;
-		}		
-	}
-}
-
-function PongCheckMilliSeconds(time) //returns pongTicks based on milliseconds you want
-{
-	var result = (pongTicks % (time / pongGameIntervalSpeed));
-	
-	if(result == 0){return true;}
-	return false;
-}
-
-function PongSpawnBall()
-{
-	if(pongrunning && typeof variable !== 'undefined')
-	{
-		var newX = Math.floor(Math.random() * 400) + 50;
-		var newY = Math.floor(Math.random() * 250) + 50;
-		var newVX = Math.floor(Math.random() * 7) - 4;
-		var newVY = Math.floor(Math.random() * 7) - 4;
-
-		if(newVX == 0){ newVX = 1;}
-		if(newVY == 0){ newVY = 1;}
-		
-		var r = 255;
-		var g = 255;
-		var b = 255;
-		var a = 0.8;
-		
-		pongBall = new PongCreateBall(newX,newY,newVX,newVY,r,g,b,a);
-	}
-}
-
-function PongTextObjects(fillText,colour,x,y,textSize)
+ function PongTextObjects(fillText,colour,x,y,textSize)
 {
 	this.x = x;
 	this.y = y;
@@ -623,102 +908,19 @@ function PongTextObjects(fillText,colour,x,y,textSize)
 	};
 	this.updateText = function(newText)
 	{
-			this.viewingText = newText;
+		this.viewingText = newText;
 	}
 };
 
-function PongGameDraw() {
-
-  PongClear();
-  
-  pongBall.draw();
-  pongBall.update();
-  
-  pongmainText.draw();
-
-  pongscoreText.draw();
-  
-  pongraf = window.requestAnimationFrame(PongGameDraw);
-}
-
-function PongGameOver()
-{
-	if(pongrunning == false)
-	{
-		return;
-	}
-	
-	PongBackground();
-	pongrunning = false;
-	PongStartButtonDraw();
-	
-	pongLoseText.draw();
-
-	PongEndGame();
-
-	if(pongCurrentScore > ponghighScore){ponghighScore = pongCurrentScore;}
-	
-	pongCurrentScore = 0;
-	
-	pongscoreText.updateText("Current score: " + pongCurrentScore + "  | Best Attempt: " + ponghighScore );
-	
-	window.cancelAnimationFrame(pongraf);
-}
-
-
-function PongClear() {
-  pongContex.fillStyle = 'rgba(255, 255, 255, 0.3)';
-  pongContex.fillRect(0,0,pongCanvas.width,pongCanvas.height);
-}
-
-function PongBackground() {
-  pongContex.fillStyle = 'rgba(185, 185, 0, 0.3)';
-  pongContex.fillRect(0,0,pongCanvas.width,pongCanvas.height);
-}
-
-function PongBallCollision(otherX,otherY,ballX,ballY, ballRadius, tolerance)
-{
-	var radius = ballRadius + tolerance; //fairer collision
-	
-  if(otherX <= (ballX + radius) && otherX >= (ballX - radius) && otherY <= (ballY + radius) && otherY >= (ballY - radius))
-  {
-	return true;
-  }
-  else{
-  
-	return false;
-  }
-}
-	
-function PongMouseCollisionCheck()
-{
-	var tol = 0; //not used	
-	if(pongrunning && PongBallCollision(pongLastMousePosition.x, pongLastMousePosition.y, pongBall.x, pongBall.y, pongBall.radius, tol) == true)
-	{
-		PongGameOver();
-	} 
-		
-  };
-
-function PongStartGame()
-{
-	pongTimedAreaFunction = setInterval(PongGameRunning, pongGameIntervalSpeed);
-	PongSpawnBall();
-}
-
 function PongEndGame()
 {
-	clearInterval(pongTimedAreaFunction);
+	clearInterval(pongLoopReference);
 }
 
-function PongStartButton(e)
-{	
-	if(e.x > PongStartButtonRectangleX && e.x < (PongStartButtonRectangleX + PongStartButtonRectangleWidth) && e.y > PongStartButtonRectangleY && e.y < (PongStartButtonRectangleY + PongStartButtonRectangleHeight) )
-	{
-		PongGameDraw();
-		pongrunning = true;
-	
-		PongStartGame();
-	}
-}
+function Pause(){
+	pongGamePaused = true;
+};
+function UnPause(){
+	pongGamePaused = false;
+};
 
