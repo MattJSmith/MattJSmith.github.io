@@ -22,8 +22,10 @@ var difRectY = 200;
 var difRectWidth = 250;
 var difRectHeight = 60;
 
+var pickLevelText = "Pick Level: ";
+
 var startButtonText = new textObject("Click to begin!",'black',190,150,35);
-var difficultyButtonText = new textObject("level: " + difficulty,'black',190,250,35);
+var difficultyButtonText = new textObject(pickLevelText + difficulty,'black',190,250,35);
 
 var loseText = new textObject("You lost!",'red',200,80,50);
 var scoreText = new textObject("Current score: " + currentScore + "  | Best Attempt: " + highestScore ,'black',240,30,20);
@@ -32,6 +34,7 @@ var ballSpawnSpeedSeconds;
 var ballSpawnRadius;
 var scoreDifficultyMultiplier;
 var ballSafeTIme;
+var backgroundColour = 'rgba(175, 200, 200, 1)';
 
 //underlying logic variables
 var gameIntervalSpeed = 100; //in milliseconds
@@ -42,22 +45,14 @@ var timedAreaFunction;
 
 var lastMousePos; //Position of mouse from last movement event
 
-//code starts here
-setDifficulty(1);
-
 var ballArray = []; //only lines needed to add more balls
+
+//Code that gets run:
+setDifficulty(1);
 
 initialiseGame();
 
-function  getMousePos(canvas, e) {
-  var rect = canvas.getBoundingClientRect(); // abs. size of element
-
-  return {
-    x: (e.clientX - rect.left),   // scale mouse coordinates after they have
-    y: (e.clientY - rect.top)     // been adjusted to be relative to element
-  }
-};
-
+//Events that apply
 canvas.addEventListener('mousemove', function(e) {
   if (running) 
   {
@@ -76,11 +71,33 @@ canvas.addEventListener("click", function(e) {
   if (!running) {
 	
 	var realMousePos = getMousePos(canvas,e);
+	
 	startButton(realMousePos);
 	
 	difficultyButton(realMousePos);
   }
 });
+
+//Functions that get called (But not running till called)
+function initialiseGame()
+{
+	clear();
+	mainText.draw();
+	scoreText.draw();
+	
+	startButtonDraw();
+	difficultyButtonDraw();
+}
+
+function  getMousePos(canvas, e) {
+  var rect = canvas.getBoundingClientRect(); // abs. size of element
+
+  return {
+    x: (e.clientX - rect.left),   // scale mouse coordinates after they have
+    y: (e.clientY - rect.top)     // been adjusted to be relative to element
+  }
+};
+
 function mouseCollisionCheck()
 {
 	ballArray.forEach(function(ballItem){
@@ -140,18 +157,6 @@ function setDifficulty(newDifficulty)
 }
 
 
-function initialiseGame()
-{
-	 ballArray.forEach(function(ballItem){
-		ballItem.draw();
-	});
-
-	mainText.draw();
-	scoreText.draw();
-	
-	startButtonDraw();
-	difficultyButtonDraw();
-}
 
 function newBall(startX,startY,startVX,startVY,startRadius, R,G,B,A, startSpawnSafeTime){
   this.x = startX;
@@ -207,7 +212,7 @@ function startButtonDraw(){
 	contex.stroke(); 
 }
 
-function gameRunning()
+function GameRunningLoop()
 {
 	ticks++;
 	
@@ -320,7 +325,7 @@ function randomHexColour()
 	
 }
 
-function canvasDodgeGameDraw() {
+function CanvasDodgeGameBeginDrawing() {
 
   clear();
   
@@ -333,7 +338,7 @@ function canvasDodgeGameDraw() {
 
   scoreText.draw();
   
-  raf = window.requestAnimationFrame(canvasDodgeGameDraw);
+  raf = window.requestAnimationFrame(CanvasDodgeGameBeginDrawing);
 }
 
 function gameOver()
@@ -343,7 +348,7 @@ function gameOver()
 		return;
 	}
 	
-	background();
+	clear();
 	running = false;
 	startButtonDraw();
 	difficultyButtonDraw();
@@ -363,14 +368,8 @@ function gameOver()
 	window.cancelAnimationFrame(raf);
 }
 
-
 function clear() {
-  contex.fillStyle = 'rgba(255, 255, 255, 0.3)';
-  contex.fillRect(0,0,canvas.width,canvas.height);
-}
-
-function background() {
-  contex.fillStyle = 'rgba(185, 185, 0, 0.3)';
+  contex.fillStyle = backgroundColour;
   contex.fillRect(0,0,canvas.width,canvas.height);
 }
 
@@ -387,14 +386,13 @@ function ballCollision(otherX,otherY,ballX,ballY, ballRadius, tolerance)
 	return false;
   }
 }
-
-
 	
 function startGame()
 {
-	timedAreaFunction = setInterval(gameRunning, gameIntervalSpeed);
 	addNewBall();
 	addNewBall();
+	
+	timedAreaFunction = setInterval(GameRunningLoop, gameIntervalSpeed);
 }
 
 function endGame()
@@ -407,7 +405,6 @@ function difficultyButton(e)
 	
 	if(e.x > difRectX && e.x < (difRectX + difRectWidth) && e.y > difRectY && e.y < (difRectY + difRectHeight) )
 	{
-		//do stuff	
 		if(difficulty >= 4)
 		{
 			difficulty = 1;		
@@ -419,9 +416,11 @@ function difficultyButton(e)
 		
 		setDifficulty(difficulty);
 		
-		canvasDodgeGameDraw();
 		contex.clearRect(difRectX, difRectY, difRectWidth, difRectHeight);
-		difficultyButtonText.updateText("level: " + difficulty);
+		contex.fillStyle = backgroundColour;
+		contex.fillRect(difRectX,difRectY,difRectWidth,difRectHeight);
+		  
+		difficultyButtonText.updateText(pickLevelText + difficulty);
 		difficultyButtonText.draw();
 		window.cancelAnimationFrame(raf);
 	}
@@ -429,12 +428,10 @@ function difficultyButton(e)
 
 function startButton(e)
 {	
-
 	if(e.x > startRectX && e.x < (startRectX + startRectWidth) && e.y > startRectY && e.y < (startRectY + startRectHeight) )
-	{
-		canvasDodgeGameDraw();
+	{	
 		running = true;
-	
+		CanvasDodgeGameBeginDrawing();	
 		startGame();
 	}
 }
