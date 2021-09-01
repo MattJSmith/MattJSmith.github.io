@@ -5,21 +5,31 @@
     color: navy;
     /*cursor: url(customCursor.png) 2 2, auto;; */
 }
+html {
+	
+	min-height: 110%
+}
 
 body {
     	background-color: lightblue;
-        margin-left:  20px;
+        margin-left:  1%;
+		margin-right:  1%;
+			margin-top:  1%;
+			margin-bottom:  0%;
+			min-height: 700px;
 	   border-style: solid;
+	   border-bottom: none;
+	   padding-bottom: 30px;
 }
 
 h1 {
-    font-size: 50px;
+    font-size: 70px;
     text-align: center;
     /* font-family: "Times New Roman"  how to set an indivual font */
 }
 h2
 {
-	font-size: 30px;
+	font-size: 40px;
 	text-align: center;
 }
 h3,form
