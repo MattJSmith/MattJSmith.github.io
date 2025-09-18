@@ -107,6 +107,7 @@ function initialiseGame()
 	
 	startButtonDraw();
 	difficultyButtonDraw();
+	
 }
 
 function getMousePos(canvas, e) {
@@ -477,7 +478,8 @@ function startButton(e)
 	if(e.x > startRectX && e.x < (startRectX + startRectWidth) && e.y > startRectY && e.y < (startRectY + startRectHeight) )
 	{	
 		running = true;
-		CanvasDodgeGameBeginDrawing();	
+		CanvasDodgeGameBeginDrawing();
+		lastMousePos = getMousePos(canvas,e);
 		startGame();
 	}
 }
