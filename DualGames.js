@@ -114,14 +114,26 @@ function initialiseGame()
 	difficultyButtonDraw();
 }
 
-function  getMousePos(canvas, e) {
+function getMousePos(canvas, e) {
   var rect = canvas.getBoundingClientRect(); // abs. size of element
 
+  var scaleX = canvas.width / rect.width;
+  var scaleY = canvas.height / rect.height;
+
+  var x = e.clientX - rect.left;
+  var y = e.clientY - rect.top;
+
+  //Stops Coords going out of bounds
+  x = Math.min(Math.max(x, 0), rect.width);
+  y = Math.min(Math.max(y, 0), rect.height);
+
+  // Scale to canvas pixels
   return {
-    x: (e.clientX - rect.left),   // scale mouse coordinates after they have
-    y: (e.clientY - rect.top)     // been adjusted to be relative to element
-  }
-};
+    x: x * scaleX,
+    y: y * scaleY
+  };
+}
+
 
 function mouseCollisionCheck()
 {
