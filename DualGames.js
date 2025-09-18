@@ -666,6 +666,11 @@ function LoopPongGameLogic()
 			pongscoreText.updateText("Current score: " + pongCurrentScore + "  | Best Attempt: " + ponghighScore );
 			pongTicks = 0;
 		}
+		//Every 25 points another ball spawns
+		if(pongCurrentScore % 25 === 0){
+			PongSpawnBall(); //Check if this works or remove!!
+		}
+		
 		pongBall.update();
 		
 		if( pongTopPaddle != null) {pongTopPaddle.update();}			
