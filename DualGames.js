@@ -57,16 +57,16 @@ initialiseGame();
 //Events that apply
 
 if(isMobile){
+	function handleTouch(e) {
+  e.preventDefault();
+  const touch = e.touches[0];
+  lastMousePos = getMousePos(canvas, touch);
+  // Your other logic here
+}
 	
-canvas.addEventListener('touchmove', function(e) {
-	  if (running) 
-	  {
-		e.preventDefault();
-		 const touch = e.touches[0];
-		lastMousePos = getMousePos(canvas,touch);
-	  }
-	});
-	
+canvas.addEventListener('touchstart', handleTouch);
+canvas.addEventListener('touchmove', handleTouch);
+	canvas.addEventListener('touchend', handleTouch);
 }
 else{
 canvas.addEventListener('mousemove', function(e) {
