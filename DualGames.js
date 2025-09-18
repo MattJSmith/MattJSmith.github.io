@@ -2,6 +2,8 @@ var canvas = document.getElementById('ballStage');
 var contex = canvas.getContext('2d');
 var raf; // request animation frame
 
+const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
 //actual game objects and game logic variables
 var running = false;
 
@@ -53,12 +55,8 @@ setDifficulty(1);
 initialiseGame();
 
 //Events that apply
-canvas.addEventListener('mousemove', function(e) {
-  if (running) 
-  {
-	lastMousePos = getMousePos(canvas,e);
-  }
-});
+
+if(isMobile){
 
 canvas.addEventListener('touchstart', function(e) {
   if (running) 
@@ -73,7 +71,7 @@ canvas.addEventListener('touchstart', function(e) {
     contex.fill();
   }
 });
-
+	
 canvas.addEventListener('touchmove', function(e) {
   if (running) 
   {
@@ -87,6 +85,16 @@ canvas.addEventListener('touchmove', function(e) {
     contex.fill();
   }
 });
+}
+else{
+canvas.addEventListener('mousemove', function(e) {
+  if (running) 
+  {
+	lastMousePos = getMousePos(canvas,e);
+  }
+});
+}
+
 
 canvas.addEventListener("mouseout", function(e) {
 
