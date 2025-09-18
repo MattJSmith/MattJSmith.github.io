@@ -114,7 +114,7 @@ function getMousePos(canvas, e) {
   var tempY = e.clientY - rect.top;
 
   //Stops Coords going out of bounds
-  var padding = 5;
+  var padding = 50;
   tempX = Math.min(Math.max(tempX, padding), rect.width - padding);
   tempY = Math.min(Math.max(tempY, padding), rect.height - padding);
 
