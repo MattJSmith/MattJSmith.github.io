@@ -64,27 +64,18 @@ canvas.addEventListener('touchstart', function(e) {
 	e.preventDefault();
 	const touch = e.touches[0];
 	lastMousePos = getMousePos(canvas,touch);
-	  
-	contex.beginPath();
-    contex.arc(lastMousePos.x, lastMousePos.y, 5, 0, Math.PI * 2);
-    contex.fillStyle = "red";
-    contex.fill();
   }
 });
 	
 canvas.addEventListener('touchmove', function(e) {
-  if (running) 
-  {
-	e.preventDefault();
-	 const touch = e.touches[0];
-	lastMousePos = getMousePos(canvas,touch);
-	  
-	contex.beginPath();
-    contex.arc(lastMousePos.x, lastMousePos.y, 5, 0, Math.PI * 2);
-    contex.fillStyle = "red";
-    contex.fill();
-  }
-});
+	  if (running) 
+	  {
+		e.preventDefault();
+		 const touch = e.touches[0];
+		lastMousePos = getMousePos(canvas,touch);
+	  }
+	});
+	
 }
 else{
 canvas.addEventListener('mousemove', function(e) {
@@ -95,11 +86,9 @@ canvas.addEventListener('mousemove', function(e) {
 });
 }
 
-
 canvas.addEventListener("mouseout", function(e) {
 
 		gameOver();
-  
 });
 
 canvas.addEventListener("click", function(e) {
@@ -233,6 +222,15 @@ function newBall(startX,startY,startVX,startVY,startRadius, R,G,B,A, startSpawnS
   }
   }
 };
+
+function drawCursor(){
+	if(isMobile){
+	contex.beginPath();
+    contex.arc(lastMousePos.x, lastMousePos.y, 5, 0, Math.PI * 2);
+    contex.fillStyle = "red";
+    contex.fill();
+	}
+}
 
 function difficultyButtonDraw()
 {
@@ -373,7 +371,7 @@ function CanvasDodgeGameBeginDrawing() {
   mainText.draw();
 
   scoreText.draw();
-  
+  drawCursor();
   raf = window.requestAnimationFrame(CanvasDodgeGameBeginDrawing);
 }
 
