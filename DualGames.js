@@ -67,10 +67,10 @@ canvas.addEventListener('touchstart', function(e) {
 	const touch = e.touches[0];
 	lastMousePos = getMousePos(canvas,touch);
 	  
-	context.beginPath();
-    context.arc(lastMousePos.x, lastMousePos.y, 5, 0, Math.PI * 2);
-    context.fillStyle = "red";
-    context.fill();
+	contex.beginPath();
+    contex.arc(lastMousePos.x, lastMousePos.y, 5, 0, Math.PI * 2);
+    contex.fillStyle = "red";
+    contex.fill();
   }
 });
 
@@ -81,10 +81,10 @@ canvas.addEventListener('touchmove', function(e) {
 	 const touch = e.touches[0];
 	lastMousePos = getMousePos(canvas,touch);
 	  
-	context.beginPath();
-    context.arc(lastMousePos.x, lastMousePos.y, 5, 0, Math.PI * 2);
-    context.fillStyle = "red";
-    context.fill();
+	contex.beginPath();
+    contex.arc(lastMousePos.x, lastMousePos.y, 5, 0, Math.PI * 2);
+    contex.fillStyle = "red";
+    contex.fill();
   }
 });
 
