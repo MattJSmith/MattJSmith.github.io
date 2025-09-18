@@ -63,8 +63,8 @@ canvas.addEventListener('mousemove', function(e) {
 canvas.addEventListener('touchstart', function(e) {
   if (running) 
   {
-	event.preventDefault();
-	  
+	e.preventDefault();
+	const touch = e.touches[0];
 	lastMousePos = getMousePos(canvas,touch);
 	  
 	context.beginPath();
@@ -77,8 +77,8 @@ canvas.addEventListener('touchstart', function(e) {
 canvas.addEventListener('touchmove', function(e) {
   if (running) 
   {
-	event.preventDefault();
-	  
+	e.preventDefault();
+	 const touch = e.touches[0];
 	lastMousePos = getMousePos(canvas,touch);
 	  
 	context.beginPath();
