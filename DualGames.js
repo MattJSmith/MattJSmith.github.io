@@ -64,9 +64,8 @@ if(isMobile){
   // Your other logic here
 }
 	
-canvas.addEventListener('touchstart', handleTouch);
-canvas.addEventListener('touchmove', handleTouch);
-	canvas.addEventListener('touchend', handleTouch);
+canvas.addEventListener('touchstart', handleTouch,{ passive: false });
+canvas.addEventListener('touchmove', handleTouch,{ passive: false });
 }
 else{
 canvas.addEventListener('mousemove', function(e) {
@@ -77,10 +76,9 @@ canvas.addEventListener('mousemove', function(e) {
 });
 }
 
-canvas.addEventListener("mouseout", function(e) {
-
-		gameOver();
-});
+//canvas.addEventListener("mouseout", function(e) {
+	//	gameOver();
+//});
 
 canvas.addEventListener("click", function(e) {
 	
