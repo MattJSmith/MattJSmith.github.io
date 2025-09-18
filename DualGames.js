@@ -348,11 +348,11 @@ function textObject(fillText,colour,x,y,textSize)
 
 function randon255ForColour(prevColour = 0)
 {	
-	var random = Math.floor(Math.random() * 256);
+	var random = Math.floor(Math.random() * 255);
 	if(random == prevColour){
-	random = Math.floor(Math.random() * 256);
+	random = Math.floor(Math.random() * 255);
 	}
-	return 1;
+	return random;
 }
 
 function randomHexColour()
