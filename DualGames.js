@@ -55,15 +55,19 @@ setDifficulty(1);
 initialiseGame();
 
 //Events that apply
-	function handleTouch(e) {
+
+
+if(isMobile){
+	canvas.addEventListener('touchstart', 	function (e) {
   e.preventDefault();
   const touch = e.touches[0];
   lastMousePos = getMousePos(canvas, touch);
-}
-
-if(isMobile){
-	canvas.addEventListener('touchstart', handleTouch);
-	canvas.addEventListener('touchmove', handleTouch);
+});
+	canvas.addEventListener('touchmove', 	function (e) {
+  e.preventDefault();
+  const touch = e.touches[0];
+  lastMousePos = getMousePos(canvas, touch);
+});
 }
 else{
 canvas.addEventListener('mousemove', function(e) {
