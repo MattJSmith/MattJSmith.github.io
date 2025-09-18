@@ -546,7 +546,7 @@ pongCanvas.addEventListener('mousemove', function(e) {
   }
 });
 
-	canvas.addEventListener('touchmove', function (e) {
+	pongCanvas.addEventListener('touchmove', function (e) {
   	e.preventDefault();
   	const touch = e.touches[0];
   	pongLastMousePosition = getMousePosPong(canvas, touch);
