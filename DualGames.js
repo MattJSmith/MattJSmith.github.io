@@ -2,7 +2,7 @@ var canvas = document.getElementById('ballStage');
 var contex = canvas.getContext('2d');
 var raf; // request animation frame
 
-const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+const isMobile = true// /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 //actual game objects and game logic variables
 var running = false;
