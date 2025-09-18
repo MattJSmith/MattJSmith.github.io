@@ -225,22 +225,16 @@ function newBall(startX,startY,startVX,startVY,startRadius, R,G,B,A, startSpawnS
 
 function drawCursor(){
 	if(isMobile){
- 	contex.beginPath();
-    contex.arc(lastMousePos.x, lastMousePos.y, 50, 0, Math.PI*2);
-    contex.closePath();
+ 		contex.beginPath();
+    	contex.arc(lastMousePos.x, lastMousePos.y, 50, 0, Math.PI*2,true);
+    	contex.closePath();
 	
-    contex.fillStyle = 'red';
-    contex.fill();
+	    contex.fillStyle = 'red';
+   	 	contex.fill();
 	
-	contex.lineWidth = 1;
-    contex.strokeStyle = 'rgba(5,5,5,0.1)';
-    contex.stroke();
-
-		
-	contex.beginPath();
-    contex.arc(lastMousePos.x, lastMousePos.y, 5, 0, Math.PI * 2);
-    contex.fillStyle = "red";
-    contex.fill();
+		contex.lineWidth = 1;
+    	contex.strokeStyle = 'rgba(5,5,5,0.1)';
+    	contex.stroke();
 	}
 }
 
