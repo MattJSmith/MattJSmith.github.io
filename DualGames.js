@@ -60,6 +60,18 @@ canvas.addEventListener('mousemove', function(e) {
   }
 });
 
+canvas.addEventListener('touchmove', function(e) {
+  if (running) 
+  {
+	event.preventDefault();
+	lastMousePos = getMousePos(canvas,e);
+	context.beginPath();
+    context.arc(x, y, 5, 0, Math.PI * 2);
+    context.fillStyle = "red";
+    context.fill();
+  }
+});
+
 canvas.addEventListener("mouseout", function(e) {
 
 		gameOver();
