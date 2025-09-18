@@ -110,10 +110,10 @@ function initialiseGame()
 }
 
 function getMousePos(canvas, e) {
-  if (!e ) {
-    console.warn("Invalid event for getMousePos:", e);
-    return { x: 0, y: 0 };
-  }
+ // if (!e ) {
+  //  console.warn("Invalid event for getMousePos:", e);
+ //   return { x: 0, y: 0 };
+  //}
   var rect = canvas.getBoundingClientRect();
   var tempX = e.clientX - rect.left;
   var tempY = e.clientY - rect.top;
