@@ -666,10 +666,6 @@ function LoopPongGameLogic()
 			pongscoreText.updateText("Current score: " + pongCurrentScore + "  | Best Attempt: " + ponghighScore );
 			pongTicks = 0;
 		}
-		//Every 25 points another ball spawns
-		if(pongCurrentScore % 25 === 0){
-			PongSpawnBall(); //Check if this works or remove!!
-		}
 		
 		pongBall.update();
 		
@@ -891,8 +887,8 @@ function PongCollisionWithPaddle()
 	{
 		this.x += this.vx;
 		this.y += this.vy;
-		this.vx *= 1.00001;
-		this.vy *= 1.00001;
+		this.vx *= 1.00003;
+		this.vy *= 1.00003;
 		
 		if (this.y + this.vy > pongCanvas.height && pongBotPaddle == null) {
 			this.vy = -this.vy;
