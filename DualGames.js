@@ -55,17 +55,15 @@ setDifficulty(1);
 initialiseGame();
 
 //Events that apply
-
-if(isMobile){
 	function handleTouch(e) {
   e.preventDefault();
   const touch = e.touches[0];
   lastMousePos = getMousePos(canvas, touch);
-  // Your other logic here
 }
-	
-canvas.addEventListener('touchstart', handleTouch);
-canvas.addEventListener('touchmove', handleTouch);
+
+if(isMobile){
+	canvas.addEventListener('touchstart', handleTouch);
+	canvas.addEventListener('touchmove', handleTouch);
 }
 else{
 canvas.addEventListener('mousemove', function(e) {
