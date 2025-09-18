@@ -106,22 +106,19 @@ function initialiseGame()
 }
 
 function getMousePos(canvas, e) {
-  var rect = canvas.getBoundingClientRect(); // abs. size of element
-
-  var scaleX = canvas.width / rect.width;
-  var scaleY = canvas.height / rect.height;
-
-  var x = e.clientX - rect.left;
-  var y = e.clientY - rect.top;
+	
+  var rect = canvas.getBoundingClientRect();
+  var tempX = e.clientX - rect.left;
+  var tempY = e.clientY - rect.top;
 
   //Stops Coords going out of bounds
-  x = Math.min(Math.max(x, 0), rect.width);
-  y = Math.min(Math.max(y, 0), rect.height);
+  tempX = Math.min(Math.max(tempX, 0), rect.width);
+  tempY = Math.min(Math.max(tempY, 0), rect.height);
 
   // Scale to canvas pixels
   return {
-    x: x, //* scaleX,
-    y: y// * scaleY
+    x: tempX,
+    y: tempY
   };
 }
 
