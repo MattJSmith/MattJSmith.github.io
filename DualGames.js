@@ -66,9 +66,9 @@ if(isMobile){
   }
 	});
 	canvas.addEventListener('touchmove', function (e) {
-  		e.preventDefault();
 		if (running) 
   	{
+		 		e.preventDefault();
   	const touch = e.touches[0];
   	lastMousePos = getMousePos(canvas, touch);}
 	});
