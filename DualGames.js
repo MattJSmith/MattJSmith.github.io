@@ -59,17 +59,19 @@ initialiseGame();
 if(isMobile){
 	canvas.addEventListener('touchstart', function (e) {
   		if (running) 
-  {e.preventDefault();
+  			{
+				e.preventDefault();
  		const touch = e.touches[0];
   		lastMousePos = getMousePos(canvas, touch);
-  }});
+  }
+	});
 	canvas.addEventListener('touchmove', function (e) {
-  	e.preventDefault();
+  		e.preventDefault();
 		if (running) 
-  {
+  	{
   	const touch = e.touches[0];
   	lastMousePos = getMousePos(canvas, touch);}
-});
+	});
 }
 else{
 canvas.addEventListener('mousemove', function(e) {
@@ -93,7 +95,7 @@ canvas.addEventListener("click", function(e) {
 	startButton(realMousePos);
 	
 	difficultyButton(realMousePos);
-  }else{	lastMousePos = getMousePos(canvas,e);}
+  }
 });
 
 //Functions that get called (But not running till called)
