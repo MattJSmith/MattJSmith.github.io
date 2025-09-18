@@ -60,6 +60,20 @@ canvas.addEventListener('mousemove', function(e) {
   }
 });
 
+canvas.addEventListener('touchstart', function(e) {
+  if (running) 
+  {
+	event.preventDefault();
+	  
+	lastMousePos = getMousePos(canvas,touch);
+	  
+	context.beginPath();
+    context.arc(lastMousePos.x, lastMousePos.y, 5, 0, Math.PI * 2);
+    context.fillStyle = "red";
+    context.fill();
+  }
+});
+
 canvas.addEventListener('touchmove', function(e) {
   if (running) 
   {
