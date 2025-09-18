@@ -57,12 +57,12 @@ initialiseGame();
 //Events that apply
 
 if(isMobile){
-	canvas.addEventListener('touchstart', 	function (e) {
+	canvas.addEventListener('touchstart', function (e) {
   		e.preventDefault();
  		const touch = e.touches[0];
   		lastMousePos = getMousePos(canvas, touch);
 	});
-	canvas.addEventListener('touchmove', 	function (e) {
+	canvas.addEventListener('touchmove', function (e) {
   	e.preventDefault();
   	const touch = e.touches[0];
   	lastMousePos = getMousePos(canvas, touch);
@@ -556,7 +556,7 @@ pongCanvas.addEventListener("mouseover", function(e) {
 pongCanvas.addEventListener("click", function(e) {
 	
   if (!pongrunning) {
-	pongLastMousePosition = getMousePos(pongCanvas,e);	  
+	pongLastMousePosition = getMousePosPong(pongCanvas,e);	  
 	
 	var currentPositionOnClick = getMousePos(pongCanvas,e);
 	PongStartButton(currentPositionOnClick);	
@@ -565,7 +565,7 @@ pongCanvas.addEventListener("click", function(e) {
 });
 
 //Functions that only run when called
-function getMousePos(pongCanvas, e) {
+function getMousePosPong(pongCanvas, e) {
   var rect = pongCanvas.getBoundingClientRect(); // abs. size of element
 
   return {
