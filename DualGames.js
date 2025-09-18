@@ -90,9 +90,7 @@ canvas.addEventListener("click", function(e) {
 	startButton(realMousePos);
 	
 	difficultyButton(realMousePos);
-	  
-	lastMousePos = getMousePos(canvas,e);
-  }
+  }else{	lastMousePos = getMousePos(canvas,e);}
 });
 
 //Functions that get called (But not running till called)
