@@ -542,8 +542,14 @@ PongInitialiseGame();
 pongCanvas.addEventListener('mousemove', function(e) {
   if (pongrunning) 
   {
-	pongLastMousePosition = getMousePos(pongCanvas,e);
+	pongLastMousePosition = getMousePosPong(pongCanvas,e);
   }
+});
+
+	canvas.addEventListener('touchmove', function (e) {
+  	e.preventDefault();
+  	const touch = e.touches[0];
+  	pongLastMousePosition = getMousePosPong(canvas, touch);
 });
 
 pongCanvas.addEventListener("mouseout", function(e) {
@@ -558,7 +564,7 @@ pongCanvas.addEventListener("click", function(e) {
   if (!pongrunning) {
 	pongLastMousePosition = getMousePosPong(pongCanvas,e);	  
 	
-	var currentPositionOnClick = getMousePos(pongCanvas,e);
+	var currentPositionOnClick = getMousePosPong(pongCanvas,e);
 	PongStartButton(currentPositionOnClick);	
 	PongSetPaddleCountButton(currentPositionOnClick);
   }
