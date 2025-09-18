@@ -114,7 +114,7 @@ function getMousePos(canvas, e) {
   var tempY = e.clientY - rect.top;
 
   //Stops Coords going out of bounds
-	var padding = 5;
+  var padding = 5;
   tempX = Math.min(Math.max(tempX, padding), rect.width - padding);
   tempY = Math.min(Math.max(tempY, padding), rect.height - padding);
 
@@ -227,9 +227,10 @@ function newBall(startX,startY,startVX,startVY,startRadius, R,G,B,A, startSpawnS
 
 function drawCursor(){
 	if(isMobile){
-		if (!lastMousePos || typeof lastMousePos.x !== 'number' || typeof lastMousePos.y !== 'number') {
-  return;
-}
+		if (!lastMousePos || typeof lastMousePos.x !== 'number' || typeof lastMousePos.y !== 'number') 
+		{
+			  return;
+		}
  		contex.beginPath();
     	contex.arc(lastMousePos.x, lastMousePos.y, 5, 0, Math.PI*2,true);
     	contex.closePath();
@@ -383,7 +384,9 @@ function CanvasDodgeGameBeginDrawing() {
   mainText.draw();
 
   scoreText.draw();
+	
   drawCursor();
+	
   raf = window.requestAnimationFrame(CanvasDodgeGameBeginDrawing);
 }
 
