@@ -107,7 +107,7 @@ function initialiseGame()
 }
 
 function getMousePos(canvas, e) {
-  if (!e || typeof e.clientX !== 'number' || typeof e.clientY !== 'number') {
+  if (!e ) {
     console.warn("Invalid event for getMousePos:", e);
     return { x: 0, y: 0 };
   }
@@ -547,9 +547,13 @@ pongCanvas.addEventListener('mousemove', function(e) {
 });
 
 	pongCanvas.addEventListener('touchmove', function (e) {
-  	e.preventDefault();
+		 if (pongrunning) 
+  {
+	e.preventDefault();
   	const touch = e.touches[0];
-  	pongLastMousePosition = getMousePosPong(canvas, touch);
+  	pongLastMousePosition = getMousePosPong(pongCanvas, touch);
+  }
+  	
 });
 
 pongCanvas.addEventListener("mouseout", function(e) {
