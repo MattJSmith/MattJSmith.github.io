@@ -2,7 +2,7 @@ var canvas = document.getElementById('ballStage');
 var context = canvas.getContext('2d');
 var raf; // request animation frame
 
-const isMobile = false // /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 //actual game objects and game logic variables
 var running = false;
@@ -45,7 +45,7 @@ var ticks = 0; //counter based off the gameIntervalSpeed
 
 var timedAreaFunction;
 
-var lastMousePos; //Position of mouse from last movement event
+var lastMousePos = { x: 0, y: 0 }; //Position of mouse from last movement event
 
 var ballArray = []; //only lines needed to add more balls
 
@@ -91,7 +91,7 @@ canvas.addEventListener("click", function(e) {
   if (!running) {
 	
 	var realMousePos = getMousePos(canvas,e);
-	
+
 	startButton(realMousePos);
 	
 	difficultyButton(realMousePos);
@@ -119,9 +119,9 @@ function getMousePos(canvas, e) {
   var tempY = e.clientY - rect.top;
 
   //Stops Coords going out of bounds
-  var padding = 0;
-  tempX = Math.min(Math.max(tempX, padding), canvas.width - padding);
-  tempY = Math.min(Math.max(tempY, padding), canvas.height - padding);
+  var padding = 5;
+  tempX = Math.min(Math.max(tempX, padding), rect.width - padding);
+  tempY = Math.min(Math.max(tempY, padding), rect.height - padding);
 
   return {
     x: tempX,
@@ -233,10 +233,6 @@ function newBall(startX,startY,startVX,startVY,startRadius, R,G,B,A, startSpawnS
 
 function drawCursor(){
 	if(isMobile){
-		if (!lastMousePos) 
-		{
-			  return;
-		}
  		context.beginPath();
     	context.arc(lastMousePos.x, lastMousePos.y, 5, 0, Math.PI*2,true);
     	context.closePath();
@@ -267,7 +263,7 @@ function startButtonDraw(){
 function GameRunningLoop()
 {
 	ticks++;
-	
+
 	if(running)
 	{
 		mouseCollisionCheck();
@@ -356,7 +352,7 @@ function randon255ForColour(prevColour = 0)
 	if(random == prevColour){
 	random = Math.floor(Math.random() * 256);
 	}
-	return random;
+	return 1;
 }
 
 function randomHexColour()
