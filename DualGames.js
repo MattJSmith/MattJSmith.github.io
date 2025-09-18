@@ -56,7 +56,6 @@ initialiseGame();
 
 //Events that apply
 
-
 if(isMobile){
 //	canvas.addEventListener('touchstart', 	function (e) {
   //		e.preventDefault();
@@ -92,7 +91,7 @@ canvas.addEventListener("click", function(e) {
 	
 	difficultyButton(realMousePos);
 	  
-	lastMousePos = getMousePos(canvas,e);
+	//lastMousePos = getMousePos(canvas,e);
   }
 });
 
