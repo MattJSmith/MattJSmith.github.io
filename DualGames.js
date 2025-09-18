@@ -58,11 +58,11 @@ initialiseGame();
 
 
 if(isMobile){
-	canvas.addEventListener('touchstart', 	function (e) {
-  		e.preventDefault();
- 		const touch = e.touches[0];
-  		lastMousePos = getMousePos(canvas, touch);
-	});
+//	canvas.addEventListener('touchstart', 	function (e) {
+  //		e.preventDefault();
+ 	//	const touch = e.touches[0];
+  		//lastMousePos = getMousePos(canvas, touch);
+//	});
 	canvas.addEventListener('touchmove', 	function (e) {
   	e.preventDefault();
   	const touch = e.touches[0];
