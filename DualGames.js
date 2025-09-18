@@ -64,8 +64,8 @@ if(isMobile){
   // Your other logic here
 }
 	
-canvas.addEventListener('touchstart', handleTouch,{ passive: false });
-canvas.addEventListener('touchmove', handleTouch,{ passive: false });
+canvas.addEventListener('touchstart', handleTouch);
+canvas.addEventListener('touchmove', handleTouch);
 }
 else{
 canvas.addEventListener('mousemove', function(e) {
