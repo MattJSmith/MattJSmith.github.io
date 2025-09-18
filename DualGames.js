@@ -58,14 +58,7 @@ initialiseGame();
 
 if(isMobile){
 
-canvas.addEventListener('touchstart', function(e) {
-  if (running) 
-  {
-	e.preventDefault();
-	const touch = e.touches[0];
-	lastMousePos = getMousePos(canvas,touch);
-  }
-});
+
 	
 canvas.addEventListener('touchmove', function(e) {
 	  if (running) 
@@ -238,7 +231,7 @@ function newBall(startX,startY,startVX,startVY,startRadius, R,G,B,A, startSpawnS
 function drawCursor(){
 	if(isMobile){
  		contex.beginPath();
-    	contex.arc(lastMousePos.x, lastMousePos.y, 50, 0, Math.PI*2,true);
+    	contex.arc(lastMousePos.x, lastMousePos.y, 5, 0, Math.PI*2,true);
     	contex.closePath();
 	
 	    contex.fillStyle = 'red';
