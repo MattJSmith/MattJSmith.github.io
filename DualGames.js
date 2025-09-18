@@ -1,5 +1,5 @@
 var canvas = document.getElementById('ballStage');
-var contex = canvas.getContext('2d');
+var context = canvas.getContext('2d');
 var raf; // request animation frame
 
 const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -199,22 +199,21 @@ function newBall(startX,startY,startVX,startVY,startRadius, R,G,B,A, startSpawnS
   this.spawnPeriodOver = false;
   
   this.draw = function() {
-    contex.beginPath();
-    contex.arc(this.x, this.y, this.radius, 0, Math.PI*2, true);
-    contex.closePath();
+    context.beginPath();
+    context.arc(this.x, this.y, this.radius, 0, Math.PI*2, true);
+    context.closePath();
 	
 	var color = "rgba(" + this.colorR + ", " + this.colorG + ", " + this.colorB + ", " + this.colorA + ")";
-    contex.fillStyle = color;
-    contex.fill();
+    context.fillStyle = color;
+    context.fill();
 	
-	contex.lineWidth = 1;
-    contex.strokeStyle = 'rgba(5,5,5,0.1)';
-    contex.stroke();
+	context.lineWidth = 1;
+    context.strokeStyle = 'rgba(5,5,5,0.1)';
+    context.stroke();
   };
   this.update = function()
   {
-    this.x += this.vx;
-  this.y += this.vy;
+
 
   if (this.y + this.vy > canvas.height || this.y + this.vy < 0) {
     this.vy = -this.vy;
@@ -222,6 +221,8 @@ function newBall(startX,startY,startVX,startVY,startRadius, R,G,B,A, startSpawnS
   if (this.x + this.vx > canvas.width || this.x + this.vx < 0) {
     this.vx = -this.vx;
   }
+	this.x += this.vx;
+  	this.y += this.vy; 
   }
 };
 
@@ -231,31 +232,31 @@ function drawCursor(){
 		{
 			  return;
 		}
- 		contex.beginPath();
-    	contex.arc(lastMousePos.x, lastMousePos.y, 5, 0, Math.PI*2,true);
-    	contex.closePath();
+ 		context.beginPath();
+    	context.arc(lastMousePos.x, lastMousePos.y, 5, 0, Math.PI*2,true);
+    	context.closePath();
 	
-	    contex.fillStyle = 'red';
-   	 	contex.fill();
+	    context.fillStyle = 'red';
+   	 	context.fill();
 	
-		contex.lineWidth = 1;
-    	contex.strokeStyle = 'rgba(5,5,5,0.1)';
-    	contex.stroke();
+		context.lineWidth = 1;
+    	context.strokeStyle = 'rgba(5,5,5,0.1)';
+    	context.stroke();
 	}
 }
 
 function difficultyButtonDraw()
 {
 	difficultyButtonText.draw();
-	contex.rect(startRectX,startRectY,startRectWidth,startRectHeight);
-	contex.stroke(); 
+	context.rect(startRectX,startRectY,startRectWidth,startRectHeight);
+	context.stroke(); 
 }
 
 function startButtonDraw(){
 	
 	startButtonText.draw();
-	contex.rect(difRectX,difRectY,difRectWidth,difRectHeight);
-	contex.stroke(); 
+	context.rect(difRectX,difRectY,difRectWidth,difRectHeight);
+	context.stroke(); 
 }
 
 function GameRunningLoop()
@@ -334,9 +335,9 @@ function textObject(fillText,colour,x,y,textSize)
 	this.viewingText= fillText;
 	
 	this.draw = function() {
-		contex.font= textSize + "px Georgia";
-		contex.fillStyle = colour;
-		contex.fillText(this.viewingText,x,y);	
+		context.font= textSize + "px Georgia";
+		context.fillStyle = colour;
+		context.fillText(this.viewingText,x,y);	
 	};
 	this.updateText = function(newText)
 	{
@@ -346,16 +347,11 @@ function textObject(fillText,colour,x,y,textSize)
 
 function randon255ForColour(prevColour = 0)
 {	
-	var boundry = prevColour + 5;
-	
-	var botHalf = Math.floor((Math.random() * 255 - prevColour)) + prevColour;
-	var topHalf = Math.floor((Math.random() * 255 + prevColour)) - prevColour;
-
-	var coinFlip = Math.floor(Math.random());
-	
-	if(coinFlip == 0) {return botHalf;}
-	
-	return topHalf;
+	var random = Math.floor(Math.random() * 256);
+	if(random == prevColour){
+	random = Math.floor(Math.random() * 256);
+	}
+	return random;
 }
 
 function randomHexColour()
@@ -418,8 +414,8 @@ function gameOver()
 }
 
 function clear() {
-  contex.fillStyle = backgroundColour;
-  contex.fillRect(0,0,canvas.width,canvas.height);
+  context.fillStyle = backgroundColour;
+  context.fillRect(0,0,canvas.width,canvas.height);
 }
 
 function ballCollision(otherX,otherY,ballX,ballY, ballRadius, tolerance)
@@ -465,9 +461,9 @@ function difficultyButton(e)
 		
 		setDifficulty(difficulty);
 		
-		contex.clearRect(difRectX, difRectY, difRectWidth, difRectHeight);
-		contex.fillStyle = backgroundColour;
-		contex.fillRect(difRectX,difRectY,difRectWidth,difRectHeight);
+		context.clearRect(difRectX, difRectY, difRectWidth, difRectHeight);
+		context.fillStyle = backgroundColour;
+		context.fillRect(difRectX,difRectY,difRectWidth,difRectHeight);
 		  
 		difficultyButtonText.updateText(pickLevelText + difficulty);
 		difficultyButtonText.draw();
