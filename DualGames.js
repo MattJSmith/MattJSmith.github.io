@@ -91,6 +91,8 @@ canvas.addEventListener("click", function(e) {
 	startButton(realMousePos);
 	
 	difficultyButton(realMousePos);
+	  
+	lastMousePos = getMousePos(canvas,e);
   }
 });
 
@@ -112,8 +114,9 @@ function getMousePos(canvas, e) {
   var tempY = e.clientY - rect.top;
 
   //Stops Coords going out of bounds
-  tempX = Math.min(Math.max(tempX, 0), rect.width);
-  tempY = Math.min(Math.max(tempY, 0), rect.height);
+	var padding = 5;
+  tempX = Math.min(Math.max(tempX, padding), rect.width - padding);
+  tempY = Math.min(Math.max(tempY, padding), rect.height - padding);
 
   return {
     x: tempX,
