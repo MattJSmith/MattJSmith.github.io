@@ -57,11 +57,11 @@ initialiseGame();
 //Events that apply
 
 if(isMobile){
-//	canvas.addEventListener('touchstart', 	function (e) {
-  //		e.preventDefault();
- 	//	const touch = e.touches[0];
-  		//lastMousePos = getMousePos(canvas, touch);
-//	});
+	canvas.addEventListener('touchstart', 	function (e) {
+  		e.preventDefault();
+ 		const touch = e.touches[0];
+  		lastMousePos = getMousePos(canvas, touch);
+	});
 	canvas.addEventListener('touchmove', 	function (e) {
   	e.preventDefault();
   	const touch = e.touches[0];
@@ -216,15 +216,15 @@ function newBall(startX,startY,startVX,startVY,startRadius, R,G,B,A, startSpawnS
   this.update = function()
   {
 
-
+	this.x += this.vx;
+  	this.y += this.vy; 
   if (this.y + this.vy > canvas.height || this.y + this.vy < 0) {
     this.vy = -this.vy;
   }
   if (this.x + this.vx > canvas.width || this.x + this.vx < 0) {
     this.vx = -this.vx;
   }
-	this.x += this.vx;
-  	this.y += this.vy; 
+
   }
 };
 
