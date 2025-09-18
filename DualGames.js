@@ -2,7 +2,7 @@ var canvas = document.getElementById('ballStage');
 var contex = canvas.getContext('2d');
 var raf; // request animation frame
 
-const isMobile = true// /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 //actual game objects and game logic variables
 var running = false;
@@ -115,7 +115,6 @@ function getMousePos(canvas, e) {
   tempX = Math.min(Math.max(tempX, 0), rect.width);
   tempY = Math.min(Math.max(tempY, 0), rect.height);
 
-  // Scale to canvas pixels
   return {
     x: tempX,
     y: tempY
@@ -225,6 +224,9 @@ function newBall(startX,startY,startVX,startVY,startRadius, R,G,B,A, startSpawnS
 
 function drawCursor(){
 	if(isMobile){
+		if (!lastMousePos || typeof lastMousePos.x !== 'number' || typeof lastMousePos.y !== 'number') {
+  return;
+}
  		contex.beginPath();
     	contex.arc(lastMousePos.x, lastMousePos.y, 5, 0, Math.PI*2,true);
     	contex.closePath();
@@ -365,6 +367,7 @@ function randomHexColour()
 	
 }
 
+//Game Loop
 function CanvasDodgeGameBeginDrawing() {
 
   clear();
