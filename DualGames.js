@@ -57,8 +57,6 @@ initialiseGame();
 //Events that apply
 
 if(isMobile){
-
-
 	
 canvas.addEventListener('touchmove', function(e) {
 	  if (running) 
@@ -122,8 +120,8 @@ function getMousePos(canvas, e) {
 
   // Scale to canvas pixels
   return {
-    x: x * scaleX,
-    y: y * scaleY
+    x: x, //* scaleX,
+    y: y// * scaleY
   };
 }
 
