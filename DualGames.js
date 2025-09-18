@@ -233,7 +233,7 @@ function newBall(startX,startY,startVX,startVY,startRadius, R,G,B,A, startSpawnS
 
 function drawCursor(){
 	if(isMobile){
-		if (!lastMousePos || typeof lastMousePos.x !== 'number' || typeof lastMousePos.y !== 'number') 
+		if (!lastMousePos) 
 		{
 			  return;
 		}
